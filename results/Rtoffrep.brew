@@ -1,0 +1,296 @@
+\documentclass{article}
+
+% Page geometry
+\usepackage{color} 
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{longtable}
+%\usepackage{pdflscape}
+\geometry{
+  margin=0.5in,% Equal margin of 0.5in from all four sides
+  includefoot% Include only the footer in the margin calculations, since you don't have a header
+}
+
+% Header/footer
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}% Page style will be fancy
+\fancyhf{}% Clear headers and footers
+\renewcommand{\headrulewidth}{0pt}% No header rule
+%\renewcommand{\footrulewidth}{0pt}% No footer rule (default)
+\fancyfoot[L]{FDM Dept \quad - \quad \href{mailto:ground.station@tap.pt}{{\small ground.station@tap.pt}}}
+\fancyfoot[C]{\textit{Take-Off Report}}
+\fancyfoot[R]{\thepage\ of \pageref{LastPage}}
+
+\usepackage{hyperref,graphicx,lipsum}
+
+\setlength{\parindent}{0pt}% No paragraph indentation
+\setlength{\parskip}{.5\baselineskip plus 0.1\baselineskip minus 0.1\baselineskip}
+
+\begin{document}
+
+\includegraphics[width=2in]{tap.png}% Logo
+
+\bigskip
+%
+%\null\hfill% FROM details
+%\begin{tabular}{@{}l@{}}
+%  \today \\[\normalbaselineskip]
+%  123 Broadway \\
+%  City, State 12345 \\
+%  Telephone (000) 111-1111 \\
+%  Email \href{mailto:john@smith.com}{john@smith.com}
+%\end{tabular}
+%
+%\bigskip
+%
+%% TO details
+%\begin{tabular}{@{}l@{}}
+%  Mrs.\ Jane Smith \\
+%  Recruitment Officer \\
+%  The Corporation \\
+%  123 Pleasant Lane \\
+%  City, State 12345
+%\end{tabular}
+%
+%\bigskip
+
+\hrulefill
+
+\begin{center}
+\begin{huge}
+\textbf{\textcolor{blue}{Take-Off Report}}\\
+%\textcolor{blue}{\textbf{Autoland Analysis Report}}
+\end{huge}
+\begin{Large}
+\vspace{0.3cm}
+\textbf{Flight Data Monitoring Dept.}\\
+\vspace{0.2cm}
+\textbf{TA/SM/FD}\\
+\end{Large}
+\vspace{0.2cm}
+Report Date: \today
+\end{center}
+
+
+\hrulefill
+
+%Dear Mrs.\ Smith,
+
+\bigskip
+
+%\section*{Measurements}
+\begin{LARGE}
+\qquad \textbf{\textcolor{blue}{Data Summary}}
+\end{LARGE}
+
+
+
+\begin{table}[h!]\normalsize
+\centering
+%\caption{Range of dates}
+\label{minmaxdates}
+\begin{tabular}{|l|l|}
+\hline
+\hline
+\textbf{Rotation Time} &   <%=rotation_time%>   \\ \hline
+\textbf{Total Number of Flights} &   \\ \hline
+\textbf{Total Number of A319} &     \\ \hline
+\textbf{Total Number of A320} &     \\ \hline
+\textbf{Minimum Date} &      \\ \hline
+\textbf{Maximum Date} &          \\ \hline
+\hline
+\end{tabular}
+\end{table}
+
+%
+%\begin{figure}[ht]
+%\begin{center}
+%\includegraphics[width=8cm,scale=1]{figures/hist_test.png}
+%%\caption{Vertical Acceleration}
+%%\label{vrtg}
+%\end{center}
+%\end{figure}
+%
+
+\newpage
+%\section*{Graphics}
+
+
+\begin{Large}
+\qquad \textbf{\textcolor{blue}{Flight Graphics}}
+\end{Large}
+%\textbf{\textcolor{blue}Graphics}}
+
+\begin{table}[h!]\normalsize
+\centering
+\caption{Lines on Graphics}
+\label{infograph}
+\begin{tabular}{|l|l|}
+\hline
+\hline
+\textbf{Green Line} &   Begining of Rotation (ptct>1deg/sec)   \\ \hline
+\textbf{Red Line} &  Lift-Off Detection (RALT Transition NEG->POS )\\ \hline
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_n11.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_n12.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_n21.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_n22.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+%
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_ff1.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_ff2.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_egt1.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_egt2.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_gs.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_long.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_raltd1.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_raltd2.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_pitch.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_ptcr.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_ptcr_dot.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_pitch_cpt.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_pitch_fo.png}
+%\caption{Vertical Acceleration}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+
+%\lipsum[1-10]% You letter
+%
+%\bigskip
+%
+%\begin{tabular}{@{}l@{}}
+%  Sincerely yours, \\[5\normalbaselineskip]
+%  John Smith
+%\end{tabular}
+
+\end{document}

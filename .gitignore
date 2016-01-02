@@ -1,0 +1,16 @@
+*.pdf
+*.png
+.Rhistory
+*.Rout
+*.log
+launch_autoland10344Rmd.r.Rout
+autoland_neo.tex
+*.csv
+*.docx
+*.xlsx
+test*.r
+*.tex
+*.aux
+*.out
+*.zip
+*.xps

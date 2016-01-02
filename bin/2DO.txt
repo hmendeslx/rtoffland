@@ -1,0 +1,3 @@
+* trabalhar o gs_dot!? -> não está a dar o esperado
+
+- finish one_case_study!!

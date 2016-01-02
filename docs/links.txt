@@ -1,0 +1,7 @@
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/nlm.html
+http://www.pdas.com/
+
+
+
+## copoulas -> detect variable correlations
+http://www.r-bloggers.com/easily-generate-correlated-variables-from-any-distribution-without-copulas/
