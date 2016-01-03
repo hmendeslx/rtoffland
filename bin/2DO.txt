@@ -1,3 +1,11 @@
-* trabalhar o gs_dot!? -> não está a dar o esperado
 
-- finish one_case_study!!
+* descrição dos parâmetros usados no report
+* verificar as unidades de todos os parâmetros
+
+* análise dos resultados da aceleração longitudinal - gráfico dgs/dt dá um decréscimo no final onde o long começa a crescer
+  as unidades também não batem certo, i.e., long em "g" e dgs/dt em m/s2 estão aprox na mesma escala de valores o que 
+  não faz sentido
+
+
+Acções finalizadas:
+* trabalhar o gs_dot!? -> não está a dar o esperado

@@ -81,10 +81,16 @@ Report Date: \today
 
 %\section*{Measurements}
 \begin{LARGE}
-\qquad \textbf{\textcolor{blue}{Data Summary}}
+\textbf{\textcolor{blue}{Data Summary}}
 \end{LARGE}
 
+%\qquad 
 
+\begin{verbatim}
+	Flight Data File: <%=fileList[s]%>
+\end{verbatim}
+
+\vspace{0.5cm}
 
 \begin{table}[h!]\normalsize
 \centering
@@ -93,15 +99,19 @@ Report Date: \today
 \begin{tabular}{|l|l|}
 \hline
 \hline
-\textbf{Rotation Time} &   <%=rotation_time%>   \\ \hline
-\textbf{Total Number of Flights} &   \\ \hline
-\textbf{Total Number of A319} &     \\ \hline
-\textbf{Total Number of A320} &     \\ \hline
-\textbf{Minimum Date} &      \\ \hline
-\textbf{Maximum Date} &          \\ \hline
+\textbf{Rotation Time [seconds]} &   <%=rotation_time%>   \\ \hline
+%\textbf{Total Number of Flights} &   \\ \hline
+%\textbf{Total Number of A319} &     \\ \hline
+%\%textbf{Total Number of A320} &     \\ \hline
+%\textbf{Minimum Date} &      \\ \hline
+%\textbf{Maximum Date} &          \\ \hline
 \hline
 \end{tabular}
 \end{table}
+
+\vspace{0.5cm}
+
+<%=par.table%>
 
 %
 %\begin{figure}[ht]
@@ -122,6 +132,8 @@ Report Date: \today
 \end{Large}
 %\textbf{\textcolor{blue}Graphics}}
 
+\vspace{1cm}
+
 \begin{table}[h!]\normalsize
 \centering
 \caption{Lines on Graphics}
@@ -129,17 +141,18 @@ Report Date: \today
 \begin{tabular}{|l|l|}
 \hline
 \hline
-\textbf{Green Line} &   Begining of Rotation (ptct>1deg/sec)   \\ \hline
-\textbf{Red Line} &  Lift-Off Detection (RALT Transition NEG->POS )\\ \hline
+\textbf{Green Line} &   Begining of Rotation (ptct $ > $ 1deg/sec)   \\ \hline
+\textbf{Red Line} &  Lift-Off Detection (RALT Transition NEG $ -> $ POS )\\ \hline
 \hline
 \end{tabular}
 \end{table}
 
+\vspace{2cm}
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_n11.png}
-%\caption{Vertical Acceleration}
+\includegraphics[width=18cm,scale=1]{figures/to_n11.png}
+\caption{N1 Rotation Eng 1 - Eng 2 [percentage]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -147,96 +160,55 @@ Report Date: \today
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_n12.png}
-%\caption{Vertical Acceleration}
+\includegraphics[width=18cm,scale=1]{figures/to_n21.png}
+\caption{N2 Rotation Eng 1 - Eng 2 [percentage]}
 %\label{vrtg}
 \end{center}
 \end{figure}
 
-
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_n21.png}
-%\caption{Vertical Acceleration}
-%\label{vrtg}
-\end{center}
-\end{figure}
-
-
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_n22.png}
-%\caption{Vertical Acceleration}
-%\label{vrtg}
-\end{center}
-\end{figure}
 
 
 %
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_ff1.png}
-%\caption{Vertical Acceleration}
+\includegraphics[width=18cm,scale=1]{figures/to_ff1.png}
+\caption{Fuel Flow [Kg/h]}
 %\label{vrtg}
 \end{center}
 \end{figure}
 
 
+
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_ff2.png}
-%\caption{Vertical Acceleration}
+\includegraphics[width=18cm,scale=1]{figures/to_egt1.png}
+\caption{EGT [degC]}
 %\label{vrtg}
 \end{center}
 \end{figure}
 
 
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_egt1.png}
-%\caption{Vertical Acceleration}
-%\label{vrtg}
-\end{center}
-\end{figure}
-
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_egt2.png}
-%\caption{Vertical Acceleration}
-%\label{vrtg}
-\end{center}
-\end{figure}
-
-
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_gs.png}
-%\caption{Vertical Acceleration}
+\includegraphics[width=18cm,scale=1]{figures/to_gs.png}
+\caption{Ground Speed 1) [knot] 2) [m/s]}
 %\label{vrtg}
 \end{center}
 \end{figure}
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_long.png}
-%\caption{Vertical Acceleration}
+\includegraphics[width=18cm,scale=1]{figures/to_long.png}
+\caption{Longitudinal Acceleration  1) Accelerometer  2) dGS/dt (filtered)}
 %\label{vrtg}
 \end{center}
 \end{figure}
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_raltd1.png}
-%\caption{Vertical Acceleration}
-%\label{vrtg}
-\end{center}
-\end{figure}
-
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_raltd2.png}
-%\caption{Vertical Acceleration}
+\includegraphics[width=18cm,scale=1]{figures/to_raltd1.png}
+\caption{Radio Altitude [ft]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -244,7 +216,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=8cm,scale=1]{figures/to_pitch.png}
-%\caption{Vertical Acceleration}
+\caption{Pitch Angle [deg]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -252,7 +224,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=8cm,scale=1]{figures/to_ptcr.png}
-%\caption{Vertical Acceleration}
+\caption{Pitch Rate [deg/s]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -261,26 +233,19 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=8cm,scale=1]{figures/to_ptcr_dot.png}
-%\caption{Vertical Acceleration}
+\caption{Pitch Acceleration $ -> $ d(pitch\_rate)/dt}
 %\label{vrtg}
 \end{center}
 \end{figure}
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_pitch_cpt.png}
-%\caption{Vertical Acceleration}
+\includegraphics[width=18cm,scale=1]{figures/to_pitch_cpt.png}
+\caption{Pitch Command 1) CAPT 2) FO}
 %\label{vrtg}
 \end{center}
 \end{figure}
 
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_pitch_fo.png}
-%\caption{Vertical Acceleration}
-%\label{vrtg}
-\end{center}
-\end{figure}
 
 
 

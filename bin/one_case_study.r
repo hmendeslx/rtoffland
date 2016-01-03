@@ -1,8 +1,12 @@
 ######################################################################
-# Take-Off -> One Case Study
-# - 
-# - 
-# 
+# Take-Off and Landing-> One Case Study
+# This script produces:
+# - TO Report
+# - LND Report
+# for one selected flight. The reports can be enable one or both for
+# the flight by setting the variables
+#  take_off_study = <0,1>
+#  landing_study = <0,1>
 #
 #
 
@@ -11,6 +15,7 @@
 rm(list=ls(all=TRUE))
 
 library(ggplot2)
+library(grid)
 library(brew)
 library(tools)
 library(data.table)
@@ -63,24 +68,74 @@ to_plots <- function(){
   t1 <- max(which(flightdata$FM_FWC==4)) + 50
   
   ptcr_dot <-derivative(ptcr[t0:t1],NROW(ptcr[t0:t1]))
-  gs_dot <-derivative(gs[t0:t1],NROW(gs[t0:t1]))
+  gs_ms <- gs[t0:t1]*c_knot_ms
+  gs_kmh <- gs_ms*c_ms_kmh
+  gs_dot <-derivative(gs_ms,NROW(gs[t0:t1]))
+  gs_dot[NROW(gs_dot)] <- 0
+  
   
   # studies - support plots
   data_takeoff <- data.frame()
   
   #time <- vector()
   time <- c(0,seq(t1-t0)/8)
+
+  # filtering gs_dot
+  gsdot.loess <- loess(y ~x, span=0.1, data.frame(x=time, y=gs_dot))
+  gsdot.filtered <- predict(gsdot.loess, data.frame(x=time))
+  
+  long_ms2 <- long[t0:t1]*9.8
+  
   data_takeoff <- as.data.frame(cbind(time, gs[t0:t1],raltd1[t0:t1],
                       n11[t0:t1], n21[t0:t1],n12[t0:t1], n22[t0:t1],
                       ff1[t0:t1], ff2[t0:t1], raltd2[t0:t1],
                       egt1[t0:t1], egt2[t0:t1], long[t0:t1], ptcr_dot,
                       pitch_cpt[t0:t1],pitch_fo[t0:t1],pitch[t0:t1],
-                      ptcr[t0:t1]))
+                      ptcr[t0:t1], gs_ms, gs_dot, gsdot.filtered, long_ms2))
   
   names(data_takeoff) <- c("time", "GS", "RALTD1", "N11", "N21", "N12", "N22",
                            "FF1", "FF2", "RALTD2", "EGT1", "EGT2", "LONG",
                            "PTCR_DOT","PITCH_CPT","PITCH_FO", "PITCH",
-                           "PTCR")
+                           "PTCR", "GS_MS", "GS_DOT", "GSDOT_FILT", "LONG_MS2")
+  
+  # Parameter Description
+  par.names <- as.vector(names(data_takeoff))
+  par.descr <- c("time [seconds]", 
+                 "Ground Speed [knot]", 
+                 "Radio Altitude System 1 [ft]", 
+                 "N1 Rotation Engine 1  [percentage]", 
+                 "N2 Rotation Engine 1  [percentage]", 
+                 "N1 Rotation Engine 2  [percentage]", 
+                 "N2 Rotation Engine 2  [percentage]2",
+                 "Fuel Flow Engine 1 [Kg/h]", 
+                 "Fuel Flow Engine 2 [Kg/h]", 
+                 "Radio Altitude System 2 [ft]", 
+                 "Exahust Gas Temperature Engine 1 [degC]", 
+                 "Exahust Gas Temperature Engine 2 [degC]", 
+                 "Longitudinal Acceleration [g]",
+                 "Pitch Acceleration [deg/sec^2}",
+                 "Pitch Command Captain [deg]",
+                 "Pitch Command First Officer [deg]", 
+                 "Pitch Angle [deg]",
+                 "Pitch Rate [deg/sec]", 
+                 "Ground Speed SI Units [m/sec]", 
+                 "Acceleration derived from Ground Speed [m/sec^2]", 
+                 "Filtered acceleration derived from Ground Speed [m/sec^2] (loess package)", 
+                 "Longitudinal Acceleration SI units [m/sec^2]")
+  
+  par.print <- as.data.frame(cbind(par.names, par.descr))
+  names(par.print) <- c("Param Menemonic", "Param Description")
+  
+  par.table <- print(xtable(par.print, format="latex"), include.rownames=FALSE, 
+               size="scriptsize") 
+           
+  
+  
+#   <- print(xtable(flightdata, format="latex"), include.rownames=FALSE, size="scriptsize", 
+#            tabular.environment = 'longtable', floating = FALSE, add.to.row = addtorow,  
+#            hline.after=c(-1), sanitize.colnames.function=bold) 
+  
+  
   # Lift-Off detection
   tlg <- min(which(LG_left[t0:t1]==0))
   trg <- min(which(LG_right[t0:t1]==0))
@@ -113,107 +168,133 @@ to_plots <- function(){
   rotation_time <- (loff - rot)/8 
   rot <- rot/8 # seconds
 
+
   # Graphics
   setwd(figurepath)
   
-  png("to_gs.png")
-  p <- qplot(time, GS, data=data_takeoff,  col=I("blue"),
-             xlab="Time [seconds]",  geom=c("line"), size=I(1)) +
+  png("to_gs.png", width=960)
+  p1 <- qplot(time, GS, data=data_takeoff,  col=I("blue"),
+             xlab="Time [seconds]",  ylab="Ground Speed [Knot]" ,geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
-  dev.off()
+  #print(p)
+  #dev.off()
   
-  png("to_raltd1.png")
-  p <- qplot(time, RALTD1, data=data_takeoff,  col=I("blue"),
-             xlab="Time [seconds]", geom=c("line"), size=I(1)) +
-             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
-             geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
-  dev.off()
-
-  png("to_n11.png")
-  p <- qplot(time, N11, data=data_takeoff,  col=I("blue"),
-             xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
-             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
-             geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
+  #png("to_gsms.png")
+  p2 <- qplot(time, GS_MS, data=data_takeoff,  col=I("blue"),
+           xlab="Time [seconds]",  ylab="Ground Speed [m/s]" ,geom=c("line"), size=I(1)) +
+           geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+           geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
   dev.off()
 
-  png("to_n21.png")
-  p <- qplot(time, N21, data=data_takeoff, col=I("blue"),
+  png("to_raltd1.png", width=960)
+  p1 <- qplot(time, RALTD1, data=data_takeoff,  col=I("blue"),
              xlab="Time [seconds]", geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
+  #print(p)
+  #dev.off()
+
+  #png("to_raltd2.png")
+  p2 <- qplot(time, RALTD2, data=data_takeoff, col=I("blue"),
+           xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+           geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+           geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
   dev.off()
-  
-  png("to_n12.png")
-  p <- qplot(time, N12, data=data_takeoff, col=I("blue"),
-             xlab="Time [seconds]", geom=c("line"), size =I(1)) +
-             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
-             geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
-  dev.off()
-  
-  png("to_n22.png")
-  p <- qplot(time, N22, data=data_takeoff, col=I("blue"),
-             xlab="Time [seconds]", geom=c("line"), size=I(1)) +
-             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
-             geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
-  dev.off()
-  
-  png("to_ff1.png")
-  p <- qplot(time, FF1, data=data_takeoff, col=I("blue"),
-             xlab="Time [seconds]", geom=c("line"), size=I(1)) +
-             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
-             geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
-  dev.off()
-  
-  png("to_ff2.png")
-  p <- qplot(time, FF2, data=data_takeoff, col=I("blue"),
+
+  png("to_n11.png", width=960)
+  p1 <- qplot(time, N11, data=data_takeoff,  col=I("blue"),
              xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
+  #print(p)
+  #dev.off()
+
+  #png("to_n12.png")
+  p2 <- qplot(time, N12, data=data_takeoff, col=I("blue"),
+           xlab="Time [seconds]", geom=c("line"), size =I(1)) +
+           geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+           geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
   dev.off()
-  
-  
-  png("to_raltd2.png")
-  p <- qplot(time, RALTD2, data=data_takeoff, col=I("blue"),
+
+
+  png("to_n21.png", width=960)
+  p1 <- qplot(time, N21, data=data_takeoff, col=I("blue"),
              xlab="Time [seconds]", geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
+  #print(p)
+  #dev.off()
+  
+  #png("to_n22.png")
+  p2 <- qplot(time, N22, data=data_takeoff, col=I("blue"),
+             xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+             geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
   dev.off()
   
+
+  png("to_ff1.png", width=960)
+  p1 <- qplot(time, FF1, data=data_takeoff, col=I("blue"),
+             xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+             geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
   
-  png("to_egt1.png")
-  p <- qplot(time, EGT1, data=data_takeoff, col=I("blue"),
+  #png("to_ff2.png")
+  p2 <- qplot(time, FF2, data=data_takeoff, col=I("blue"),
              xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
+  #print(p)
+  arrange(p1,p2)
   dev.off()
   
-  png("to_egt2.png")
-  p <- qplot(time, EGT2, data=data_takeoff, col=I("blue"),
+  
+  png("to_egt1.png", width=960)
+  p1 <- qplot(time, EGT1, data=data_takeoff, col=I("blue"),
+             xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
+             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+             geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
+  
+  #png("to_egt2.png")
+  p2 <- qplot(time, EGT2, data=data_takeoff, col=I("blue"),
              xlab="Time [seconds]", geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
+  #print(p)
+  arrange(p1,p2)
   dev.off()
   
   
-  png("to_long.png")
-  p <- qplot(time, LONG, data=data_takeoff,  col=I("blue"),
-             xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+  png("to_long.png", width=960)
+  p1 <- qplot(time, LONG, data=data_takeoff,  col=I("blue"),
+             xlab="Time [seconds]", ylab="LONG [g]" ,geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) + 
              geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
+  #print(p)
+  #dev.off()
+
+  #png("to_gsdot.png")
+  p2 <- qplot(time, GSDOT_FILT, data=data_takeoff,  col=I("blue"),
+           xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+           geom_vline(xintercept=loff_sec, color="dark red", size=1) + 
+           geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
   dev.off()
+
 
   png("to_ptcr_dot.png")
   p <- qplot(time, PTCR_DOT, data=data_takeoff,  col=I("blue"),
@@ -223,20 +304,21 @@ to_plots <- function(){
   print(p)
   dev.off()
 
-  png("to_pitch_cpt.png")
-  p <- qplot(time, PITCH_CPT, data=data_takeoff,  col=I("blue"),
+  png("to_pitch_cpt.png", width=960)
+  p1 <- qplot(time, PITCH_CPT, data=data_takeoff,  col=I("blue"),
            xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
            geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
-  dev.off()
+  #print(p)
+  #dev.off()
 
-  png("to_pitch_fo.png")
-  p <- qplot(time, PITCH_FO, data=data_takeoff,  col=I("blue"),
+  #png("to_pitch_fo.png")
+  p2 <- qplot(time, PITCH_FO, data=data_takeoff,  col=I("blue"),
            xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
            geom_vline(xintercept=rot, color="green", size=1)
-  print(p)
+  #print(p)
+  arrange(p1,p2)
   dev.off()
 
 
@@ -256,6 +338,7 @@ to_plots <- function(){
            geom_vline(xintercept=rot, color="green", size=1)
   print(p)
   dev.off()
+
 
   
   # PDF Reporting
@@ -387,7 +470,28 @@ landing_plots <- function(){
     
 }
 
-
+vp.layout <- function(x, y) viewport(layout.pos.row=x, layout.pos.col=y)
+arrange <- function(..., nrow=NULL, ncol=NULL, as.table=FALSE) {
+  dots <- list(...)
+  n <- length(dots)
+  if(is.null(nrow) & is.null(ncol)) { nrow = floor(n/2) ; ncol = ceiling(n/nrow)}
+  if(is.null(nrow)) { nrow = ceiling(n/ncol)}
+  if(is.null(ncol)) { ncol = ceiling(n/nrow)}
+  ## NOTE see n2mfrow in grDevices for possible alternative
+  grid.newpage()
+  pushViewport(viewport(layout=grid.layout(nrow,ncol) ) )
+  ii.p <- 1
+  for(ii.row in seq(1, nrow)){
+    ii.table.row <- ii.row
+    if(as.table) {ii.table.row <- nrow - ii.table.row + 1}
+    for(ii.col in seq(1, ncol)){
+      ii.table <- ii.p
+      if(ii.p > n) break
+      print(dots[[ii.table]], vp=vp.layout(ii.table.row, ii.col))
+      ii.p <- ii.p + 1
+    }
+  }
+}
 
 ##################################################### MAIN
 ### Choose the type of analysis:
@@ -399,9 +503,9 @@ landing_study = 0
 
 ## Constants
 c_knot_ms <- 1852/3600
+c_ms_kmh <- 3.6
 
 ## paths
-
 flightpath <- "C:/FlightDB/TTD"    ## Insert case into the respective folder
 binpath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/bin"
 resultpath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/results"
@@ -473,9 +577,9 @@ s=10
     q2 <- approx(seq(1:nrows), flightdata$Q2,xout=c(1:nrows), method="linear",n=nrows)$y
     pt1 <- approx(seq(1:nrows), flightdata$PT1,xout=c(1:nrows), method="linear",n=nrows)$y
     pt2 <- approx(seq(1:nrows), flightdata$PT2,xout=c(1:nrows), method="linear",n=nrows)$y
-    flight_phase <- approx(seq(1:nrows), flightdata$FLIGHT_PHASE,xout=c(1:nrows), method="linear",n=nrows)$y
-
-#apflare <- approx(seq(1:nrows), flightdata$APFLARE,xout=c(1:nrows), method="linear",n=nrows)$y
+    
+    #flight_phase <- approx(seq(1:nrows), flightdata$FLIGHT_PHASE,xout=c(1:nrows), method="linear",n=nrows)$y
+    #apflare <- approx(seq(1:nrows), flightdata$APFLARE,xout=c(1:nrows), method="linear",n=nrows)$y
 
 ### Acrescentar
 ###    

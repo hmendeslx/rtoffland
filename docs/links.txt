@@ -2,6 +2,13 @@ https://stat.ethz.ch/R-manual/R-devel/library/stats/html/nlm.html
 http://www.pdas.com/
 
 
+## ggplot
+http://www.statmethods.net/advgraphs/ggplot2.html
+http://www.r-bloggers.com/combining-ggplot-images/
+
+## loess
+http://research.stowers-institute.org/efg/R/Statistics/loess.htm
+
 
 ## copoulas -> detect variable correlations
 http://www.r-bloggers.com/easily-generate-correlated-variables-from-any-distribution-without-copulas/
