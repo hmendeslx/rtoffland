@@ -64,6 +64,7 @@
 \end{huge}
 \begin{Large}
 \vspace{0.3cm}
+%\textbf{Relatório de Suporte a Estagio TAP/IST (Duarte Cardao)}\\
 \textbf{Flight Data Monitoring Dept.}\\
 \vspace{0.2cm}
 \textbf{TA/SM/FD}\\
@@ -103,10 +104,12 @@ Report Date: \today
 \textbf{Runway Heading} &  <%=rwhdg%>   \\ \hline
 \textbf{Date} &   <%=dat%>  \\ \hline
 \textbf{Rotation Time [second]} &   <%=rotation_time%>   \\ \hline
+\textbf{TLA1 Position} &  <%=tla1_pos%>    \\ \hline
+\textbf{TLA2 Position} &  <%=tla2_pos%>    \\ \hline
 \textbf{Flex Temperature Sytem 1 [degC]} & <%=flxtemp1%>  \\ \hline
 \textbf{Flex Temperature Sytem 1 [degC]} & <%=flxtemp2%>  \\ \hline
+\textbf{Wing Area [m2]} &  <%=area%>   \\ \hline
 
-%\%textbf{Total Number of A320} &     \\ \hline
 %\textbf{Minimum Date} &      \\ \hline
 %\textbf{Maximum Date} &          \\ \hline
 \hline
@@ -145,7 +148,7 @@ Report Date: \today
 \begin{tabular}{|l|l|}
 \hline
 \hline
-\textbf{Green Line} &   Begining of Rotation (ptct $ > $ 1deg/sec)   \\ \hline
+\textbf{Green Line} &   Begining of Rotation (ptcr $ > $ 1deg/sec)   \\ \hline
 \textbf{Red Line} &  Lift-Off Detection (RALT Transition NEG $ -> $ POS )\\ \hline
 \hline
 \end{tabular}
@@ -261,7 +264,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_temp.png}
-\caption{Temperatures [degC] 1) SAT 2) TAT}
+\caption{Temperature [degC] 1) SAT 2) TAT}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -269,7 +272,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_tla.png}
-\caption{Thust Lever 1) Eng 1 2) Eng 2}
+\caption{Thust Lever Position}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -278,7 +281,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_q.png}
-\caption{Dynamic Pressure}
+\caption{Dinamic Pressure [mBar]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -286,7 +289,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_pt.png}
-\caption{Total Pressure}
+\caption{Total Pressure [mBar]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -294,7 +297,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_p0.png}
-\caption{Eng Stat Pressure}
+\caption{Selected P0 (Amb Press) [psia]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -315,7 +318,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_p2.png}
-\caption{TBD}
+\caption{PT2 Fan Inlet Press [psia]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -324,7 +327,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_p3.png}
-\caption{TBD}
+\caption{PS3 HPC Exit Press [psia]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -333,7 +336,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_t12.png}
-\caption{TBD}
+\caption{Fan Inlet Temp [degC]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -342,7 +345,16 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_t25.png}
-\caption{TBD}
+\caption{LPC Exit Temp [degC]}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_phase.png}
+\caption{Flight Phase (FWC)}
 %\label{vrtg}
 \end{center}
 \end{figure}

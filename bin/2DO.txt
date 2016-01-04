@@ -1,20 +1,19 @@
 ####
 * incluir flex temps + pressões q e total + SAT + TAT + GW + parâmetros intermédios de motor
 
-p2_1 p2_2
+p25_1 p25_2
 
 
-??
-q1 q2 -> unidades?
-pt1 pt2 -> idem
-p0_1 p0_2 -> idem
 
 ??
 ps13_1 e ps13_2
 dão sempre valor zero!!
 
+P25_1 e P25_2 não estão a ser gravados
+ECU/262
 
 
+* Cálculo de consumo @TOff através do FF
 
 ####
 * escala de tempo trab BAC e este relatório?? Voos diferentes! Erro em algum dos trabalhos?
