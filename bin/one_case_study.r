@@ -98,7 +98,7 @@ to_plots <- function(){
                       p0_1[t0:t1], p0_2[t0:t1], gw1kg[t0:t1],
                       p2_1[t0:t1], p2_2[t0:t1],p31[t0:t1], p32[t0:t1],
                       t12_1[t0:t1], t12_2[t0:t1],t25_1[t0:t1], t25_2[t0:t1],
-                      head_mag[t0:t1]))
+                      head_mag[t0:t1], fm_fwc[t0:t1], alt_std[t0:t1]))
   
   names(data_takeoff) <- c("time", "GS", "RALTD1", "N11", "N21", "N12", "N22",
                            "FF1", "FF2", "RALTD2", "EGT1", "EGT2", "LONG",
@@ -107,7 +107,7 @@ to_plots <- function(){
                            "FLX1_TEMP", "FLX2_TEMP", "SAT", "TAT", "TLA1", "TLA2",
                            "Q1", "Q2", "PT1", "PT2", "P0_1", "P0_2", "GW1KG",
                            "P2_1", "P2_2", "P31", "P32", "T12_1", "T12_2",
-                           "T25_1", "T25_2", "HDG")
+                           "T25_1", "T25_2", "HDG", "FM_FWC", "ALT_STD")
   
   # Parameter Description
   par.names <- as.vector(names(data_takeoff))
@@ -118,7 +118,8 @@ to_plots <- function(){
                 "aircraft","aircraft","aircraft", "aircraft","aircraft", "aircraft",
                 "aircraft","aircraft", "aircraft","aircraft", "aircraft",
                 "aircraft", "aircraft","aircraft", "aircraft","aircraft", "aircraft",
-                "aircraft", "aircraft","aircraft", "aircraft", "aircraft" )
+                "aircraft", "aircraft","aircraft", "aircraft","aircraft","aircraft",
+                "aircraft")
   
   par.descr <- c("time [second]", 
                  "Ground Speed [knot]", 
@@ -148,22 +149,24 @@ to_plots <- function(){
                  "Total Air Temperature",
                  " Thrust Lever Angle Eng 1",
                  " Thrust Lever Angle Eng 2",
-                 "Dinamic Pressure Sys 1",
-                 "Dinamic Pressure Sys 2",
-                 "Total Pressure Sys 1",
-                 "Total Pressure Sys 2",
-                 "Eng 1 Static Press",
-                 "Eng 2 Static Press",
+                 "Dinamic Pressure Sys 1 [mBar]",
+                 "Dinamic Pressure Sys 2 [mBar]",
+                 "Total Pressure Sys 1 [mBar]",
+                 "Total Pressure Sys 2 [mBar]",
+                 "Selected P0 Eng1 (Amb Press) [psia]",
+                 "Selected P0 Eng2 (Amb Press) [psia]",
                  "Gross Weight [Kg]",
-                 "TBD",
-                 "TBD",
-                 "TBD",
-                 "TBD",
-                 "TBD",
-                 "TBD",
-                 "TBD",
-                 "TBD",
-                 "Magnetic Heading [deg]")
+                 "PT2 Fan Inlet Press Eng 1 [psia]",
+                 "PT2 Fan Inlet Press Eng 2 [psia]",
+                 "PS3 HPC Exit Press Eng 1 [psia]",
+                 "PS3 HPC Exit Press Eng 2 [psia]",
+                 "Fan Inlet Temp Eng 1 [degC]",
+                 "Fan Inlet Temp Eng 2 [degC]",
+                 "LPC Exit Temp Eng 1 [degC]",
+                 "LPC Exit Temp Eng 1 [degC]",
+                 "Magnetic Heading [deg]",
+                 "Flight Phase ( From FWC)",
+                 "Altitude Standard [ft]")
   
   par.print <- as.data.frame(cbind(par.names, par.descr, par.origin))
   names(par.print) <- c("Menemonic", "Description", "Origin")
@@ -207,8 +210,16 @@ to_plots <- function(){
   # integrar mais tarde em "flight_measurements"
   flxtemp1 <- round(data_takeoff$FLX1_TEMP[(t1-t0)/2],1)
   flxtemp2 <- round(data_takeoff$FLX2_TEMP[(t1-t0)/2],1)
+  tla1_pos <- data_takeoff$TLA1[2*(t1-t0)/3]
+  tla2_pos <- data_takeoff$TLA2[2*(t1-t0)/3]
+  gw_ini <- data_takeoff$GW1KG[1]
+  gw_final <- data_takeoff$GW1KG[(t1-t0)+1]
+  fuel_gw <- gw_ini - gw_final
+  # calculo de consumo através do FF - comparar com o de cima
 
   # Graphics ##$##
+  # Fast Testing Command:
+  # > with(data_takeoff, plot(FF1, N21, type="l", col="blue")); grid(,,col="dark red")
   setwd(figurepath)
 
 
@@ -300,6 +311,15 @@ to_plots <- function(){
           geom_vline(xintercept=rot, color="green", size=1)
   print(p)
   dev.off()
+
+  png("to_phase.png")
+  p <- qplot(time, FM_FWC, data=data_takeoff,  col=I("blue"),
+          xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
+          geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+          geom_vline(xintercept=rot, color="green", size=1)
+  print(p)
+  dev.off()
+
 
   png("to_p0.png", width=960)
   p1 <- qplot(time, P0_1, data=data_takeoff,  col=I("blue"),
@@ -731,19 +751,19 @@ arrange <- function(..., nrow=NULL, ncol=NULL, as.table=FALSE) {
   }
 }
 
-##################################################### MAIN
+
+#### START 
+#################################################################################
 ### Choose the type of analysis:
 ###  * set = 1 at the report desired (both =1 allowed)
-###    
+#################################################################################
 take_off_study = 1
 landing_study = 0
-
 
 ## Constants
 c_knot_ms <- 1852/3600
 c_ms_kmh <- 3.6
 area <- 138 # [m^2] - surface of the wing with flaps 
-
 
 ## paths
 flightpath <- "C:/FlightDB/TTD"    ## Insert case into the respective folder
@@ -759,7 +779,7 @@ fileList <- list.files(path=flightpath, pattern=".csv")
 #s = 1
 s=10
 
-
+# alternativa - fazer o enable deste ciclo FOR para todos os ficheiros do folder
 #for (s in 1:NROW(fileList)) {
 
 # Variable and Vector Initialization
@@ -833,6 +853,7 @@ s=10
     t12_2 <- approx(seq(1:nrows), flightdata$T12_2,xout=c(1:nrows), method="linear",n=nrows)$y
     t25_1 <- approx(seq(1:nrows), flightdata$T25_1,xout=c(1:nrows), method="linear",n=nrows)$y
     t25_2 <- approx(seq(1:nrows), flightdata$T25_2,xout=c(1:nrows), method="linear",n=nrows)$y
+    fm_fwc <- approx(seq(1:nrows), flightdata$FM_FWC,xout=c(1:nrows), method="linear",n=nrows)$y
 
 # sempre a zero!????
 #ps13_1<- approx(seq(1:nrows), flightdata$PS13_1,xout=c(1:nrows), method="linear",n=nrows)$y
