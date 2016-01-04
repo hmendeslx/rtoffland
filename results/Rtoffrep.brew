@@ -99,9 +99,13 @@ Report Date: \today
 \begin{tabular}{|l|l|}
 \hline
 \hline
-\textbf{Rotation Time [seconds]} &   <%=rotation_time%>   \\ \hline
-%\textbf{Total Number of Flights} &   \\ \hline
-%\textbf{Total Number of A319} &     \\ \hline
+\textbf{Departure Airport} & <%=origin%>  \\ \hline
+\textbf{Runway Heading} &  <%=rwhdg%>   \\ \hline
+\textbf{Date} &   <%=dat%>  \\ \hline
+\textbf{Rotation Time [second]} &   <%=rotation_time%>   \\ \hline
+\textbf{Flex Temperature Sytem 1 [degC]} & <%=flxtemp1%>  \\ \hline
+\textbf{Flex Temperature Sytem 1 [degC]} & <%=flxtemp2%>  \\ \hline
+
 %\%textbf{Total Number of A320} &     \\ \hline
 %\textbf{Minimum Date} &      \\ \hline
 %\textbf{Maximum Date} &          \\ \hline
@@ -109,8 +113,8 @@ Report Date: \today
 \end{tabular}
 \end{table}
 
-\vspace{0.5cm}
 
+\newpage
 <%=par.table%>
 
 %
@@ -246,7 +250,102 @@ Report Date: \today
 \end{center}
 \end{figure}
 
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_flxtemp.png}
+\caption{Flex Temperature [degC] 1) sys1 2) sys2}
+%\label{vrtg}
+\end{center}
+\end{figure}
 
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_temp.png}
+\caption{Temperatures [degC] 1) SAT 2) TAT}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_tla.png}
+\caption{Thust Lever 1) Eng 1 2) Eng 2}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_q.png}
+\caption{Dynamic Pressure}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_pt.png}
+\caption{Total Pressure}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_p0.png}
+\caption{Eng Stat Pressure}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\clearpage
+\newpage
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,scale=1]{figures/to_gw.png}
+\caption{Gross Weight [Kg]}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_p2.png}
+\caption{TBD}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_p3.png}
+\caption{TBD}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_t12.png}
+\caption{TBD}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_t25.png}
+\caption{TBD}
+%\label{vrtg}
+\end{center}
+\end{figure}
 
 
 %\lipsum[1-10]% You letter

@@ -59,35 +59,6 @@ derivative <- function(vector,time_interval) {
   return(f_derivative)
 }
 
-gaussian_smoothing <- function(parameter,sigma_chosen) {
-  
-  sigma=sigma_chosen
-  soma=0
-  t=seq(from=0,to=NROW(parameter)-1,by=1)
-  
-  for (j in 11:(NROW(t)-10)) {
-    t0=t[j]
-    soma[j]=0
-    sumgauss=0
-    k=j-10
-    for (i in 1:20) {
-      sumgauss=sumgauss+exp((-1)*((t0-t[k])^2)/(2*sigma^2)) 
-      k=k+1
-    }
-    
-    k=j-10
-    for (i in 1:20) {
-      weight=exp((-1)*((t0-t[k])^2)/(2*sigma^2))/sumgauss
-      soma[j]=soma[j]+parameter[k]*weight
-      k=k+1
-    }
-  }
-  
-  soma[1:10]=parameter[1:10]
-  parameter=soma
-  
-  return (parameter)
-}
 
 
 

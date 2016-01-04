@@ -24,3 +24,9 @@ points(peak$maximum,peak$objective,
 
 
 
+p <- qplot(GS, LONG_MS2, data=data_takeoff,  col=I("blue"),
+           xlab="GS", ylab="LONG_MS2" ,geom=c("line"), size=I(1))
+print(p)
+
+
+

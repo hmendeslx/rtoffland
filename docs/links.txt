@@ -9,6 +9,11 @@ http://www.r-bloggers.com/combining-ggplot-images/
 ## loess
 http://research.stowers-institute.org/efg/R/Statistics/loess.htm
 
+## GIT
+http://stackoverflow.com/questions/4114095/revert-git-repo-to-a-previous-commit
+http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html
+http://stackoverflow.com/questions/2563632/how-can-i-merge-two-commits-into-one
+
 
 ## copoulas -> detect variable correlations
 http://www.r-bloggers.com/easily-generate-correlated-variables-from-any-distribution-without-copulas/

@@ -1,11 +1,46 @@
+####
+* incluir flex temps + pressões q e total + SAT + TAT + GW + parâmetros intermédios de motor
 
-* descrição dos parâmetros usados no report
+p2_1 p2_2
+
+
+??
+q1 q2 -> unidades?
+pt1 pt2 -> idem
+p0_1 p0_2 -> idem
+
+??
+ps13_1 e ps13_2
+dão sempre valor zero!!
+
+
+
+
+####
+* escala de tempo trab BAC e este relatório?? Voos diferentes! Erro em algum dos trabalhos?
+* overplot de várias linhas num gráfico.. EGT.. N1... etc
+
+* calc pressão estática + plot
+
+* vd definição de long da netjets
+
+* procedimento para determinar a resolução de todos os parâmetros
+
+* distinguir entre parâmetros calculados e originais de avião (tabela de parâmetros)
+
+* calcular a distância percorrida até ao Loff
+
+
 * verificar as unidades de todos os parâmetros
 
 * análise dos resultados da aceleração longitudinal - gráfico dgs/dt dá um decréscimo no final onde o long começa a crescer
   as unidades também não batem certo, i.e., long em "g" e dgs/dt em m/s2 estão aprox na mesma escala de valores o que 
   não faz sentido
+####
 
 
 Acções finalizadas:
 * trabalhar o gs_dot!? -> não está a dar o esperado
+* descrição dos parâmetros usados no report
+
+####

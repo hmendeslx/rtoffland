@@ -72,9 +72,8 @@ to_plots <- function(){
   gs_kmh <- gs_ms*c_ms_kmh
   gs_dot <-derivative(gs_ms,NROW(gs[t0:t1]))
   gs_dot[NROW(gs_dot)] <- 0
-  
-  
-  # studies - support plots
+    
+  # data colected and calculated for take-off analysis
   data_takeoff <- data.frame()
   
   #time <- vector()
@@ -86,21 +85,42 @@ to_plots <- function(){
   
   long_ms2 <- long[t0:t1]*9.8
   
+  ##$##
   data_takeoff <- as.data.frame(cbind(time, gs[t0:t1],raltd1[t0:t1],
                       n11[t0:t1], n21[t0:t1],n12[t0:t1], n22[t0:t1],
                       ff1[t0:t1], ff2[t0:t1], raltd2[t0:t1],
                       egt1[t0:t1], egt2[t0:t1], long[t0:t1], ptcr_dot,
                       pitch_cpt[t0:t1],pitch_fo[t0:t1],pitch[t0:t1],
-                      ptcr[t0:t1], gs_ms, gs_dot, gsdot.filtered, long_ms2))
+                      ptcr[t0:t1], gs_ms, gs_dot, gsdot.filtered, long_ms2,
+                      flx1_temp[t0:t1], flx2_temp[t0:t1],sat[t0:t1],
+                      tat[t0:t1], tla1c[t0:t1], tla2c[t0:t1],
+                      q1[t0:t1], q2[t0:t1], pt1[t0:t1], pt2[t0:t1],
+                      p0_1[t0:t1], p0_2[t0:t1], gw1kg[t0:t1],
+                      p2_1[t0:t1], p2_2[t0:t1],p31[t0:t1], p32[t0:t1],
+                      t12_1[t0:t1], t12_2[t0:t1],t25_1[t0:t1], t25_2[t0:t1],
+                      head_mag[t0:t1]))
   
   names(data_takeoff) <- c("time", "GS", "RALTD1", "N11", "N21", "N12", "N22",
                            "FF1", "FF2", "RALTD2", "EGT1", "EGT2", "LONG",
                            "PTCR_DOT","PITCH_CPT","PITCH_FO", "PITCH",
-                           "PTCR", "GS_MS", "GS_DOT", "GSDOT_FILT", "LONG_MS2")
+                           "PTCR", "GS_MS", "GS_DOT", "GSDOT_FILT", "LONG_MS2",
+                           "FLX1_TEMP", "FLX2_TEMP", "SAT", "TAT", "TLA1", "TLA2",
+                           "Q1", "Q2", "PT1", "PT2", "P0_1", "P0_2", "GW1KG",
+                           "P2_1", "P2_2", "P31", "P32", "T12_1", "T12_2",
+                           "T25_1", "T25_2", "HDG")
   
   # Parameter Description
   par.names <- as.vector(names(data_takeoff))
-  par.descr <- c("time [seconds]", 
+  par.origin <- c("calcul", "aircraft", "aircraft","aircraft","aircraft",
+                "aircraft","aircraft","aircraft","aircraft","aircraft",
+                "aircraft","aircraft","aircraft","calcul","aircraft",
+                "aircraft","aircraft","aircraft","calcul","calcul","calcul","calcul",
+                "aircraft","aircraft","aircraft", "aircraft","aircraft", "aircraft",
+                "aircraft","aircraft", "aircraft","aircraft", "aircraft",
+                "aircraft", "aircraft","aircraft", "aircraft","aircraft", "aircraft",
+                "aircraft", "aircraft","aircraft", "aircraft", "aircraft" )
+  
+  par.descr <- c("time [second]", 
                  "Ground Speed [knot]", 
                  "Radio Altitude System 1 [ft]", 
                  "N1 Rotation Engine 1  [percentage]", 
@@ -120,22 +140,37 @@ to_plots <- function(){
                  "Pitch Rate [deg/sec]", 
                  "Ground Speed SI Units [m/sec]", 
                  "Acceleration derived from Ground Speed [m/sec^2]", 
-                 "Filtered acceleration derived from Ground Speed [m/sec^2] (loess package)", 
-                 "Longitudinal Acceleration SI units [m/sec^2]")
+                 "Filtered acceleration from Ground Speed [m/sec^2]", 
+                 "Longitudinal Acceleration SI units [m/sec^2]",
+                 "Flex temperature System 1",
+                 "Flex temperature System 2",
+                 "Static Air Temperature",
+                 "Total Air Temperature",
+                 " Thrust Lever Angle Eng 1",
+                 " Thrust Lever Angle Eng 2",
+                 "Dinamic Pressure Sys 1",
+                 "Dinamic Pressure Sys 2",
+                 "Total Pressure Sys 1",
+                 "Total Pressure Sys 2",
+                 "Eng 1 Static Press",
+                 "Eng 2 Static Press",
+                 "Gross Weight [Kg]",
+                 "TBD",
+                 "TBD",
+                 "TBD",
+                 "TBD",
+                 "TBD",
+                 "TBD",
+                 "TBD",
+                 "TBD",
+                 "Magnetic Heading [deg]")
   
-  par.print <- as.data.frame(cbind(par.names, par.descr))
-  names(par.print) <- c("Param Menemonic", "Param Description")
+  par.print <- as.data.frame(cbind(par.names, par.descr, par.origin))
+  names(par.print) <- c("Menemonic", "Description", "Origin")
   
   par.table <- print(xtable(par.print, format="latex"), include.rownames=FALSE, 
                size="scriptsize") 
            
-  
-  
-#   <- print(xtable(flightdata, format="latex"), include.rownames=FALSE, size="scriptsize", 
-#            tabular.environment = 'longtable', floating = FALSE, add.to.row = addtorow,  
-#            hline.after=c(-1), sanitize.colnames.function=bold) 
-  
-  
   # Lift-Off detection
   tlg <- min(which(LG_left[t0:t1]==0))
   trg <- min(which(LG_right[t0:t1]==0))
@@ -168,10 +203,212 @@ to_plots <- function(){
   rotation_time <- (loff - rot)/8 
   rot <- rot/8 # seconds
 
+  # Values to include in the report 
+  # integrar mais tarde em "flight_measurements"
+  flxtemp1 <- round(data_takeoff$FLX1_TEMP[(t1-t0)/2],1)
+  flxtemp2 <- round(data_takeoff$FLX2_TEMP[(t1-t0)/2],1)
 
-  # Graphics
+  # Graphics ##$##
   setwd(figurepath)
-  
+
+
+  png("to_t25.png", width=960)
+  p1 <- qplot(time, T25_1, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
+
+  #png("to_gsms.png")
+  p2 <- qplot(time, T25_2, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+
+  png("to_t12.png", width=960)
+  p1 <- qplot(time, T12_1, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
+
+  #png("to_gsms.png")
+  p2 <- qplot(time, T12_2, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+
+  png("to_p3.png", width=960)
+  p1 <- qplot(time, P31, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
+
+  #png("to_gsms.png")
+  p2 <- qplot(time, P32, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+
+
+  png("to_p2.png", width=960)
+  p1 <- qplot(time, P2_1, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
+
+  #png("to_gsms.png")
+  p2 <- qplot(time, P2_2, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+
+  png("to_gw.png")
+  p <- qplot(time, GW1KG, data=data_takeoff,  col=I("blue"),
+          xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
+          geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+          geom_vline(xintercept=rot, color="green", size=1)
+  print(p)
+  dev.off()
+
+  png("to_hdg.png")
+  p <- qplot(time, HDG, data=data_takeoff,  col=I("blue"),
+          xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
+          geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+          geom_vline(xintercept=rot, color="green", size=1)
+  print(p)
+  dev.off()
+
+  png("to_p0.png", width=960)
+  p1 <- qplot(time, P0_1, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]", ylab="P01"  ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
+
+  #png("to_gsms.png")
+  p2 <- qplot(time, P0_2, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]", ylab="P02", geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+
+  png("to_pt.png", width=960)
+  p1 <- qplot(time, PT1, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Total Press Sys 1" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
+
+  #png("to_gsms.png")
+  p2 <- qplot(time, PT2, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Total Press Sys 2" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+
+  png("to_q.png", width=960)
+  p1 <- qplot(time, Q1, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Dinamic Press Sys 1" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
+
+  #png("to_gsms.png")
+  p2 <- qplot(time, Q2, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Dinamic Press Sys 2" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+
+  png("to_tla.png", width=960)
+  p1 <- qplot(time, TLA1, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Thrust Lever Eng 1" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
+
+  #png("to_gsms.png")
+  p2 <- qplot(time, TLA2, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Thrust Lever Eng 2" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+
+  png("to_temp.png", width=960)
+  p1 <- qplot(time, SAT, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Static Air Temperature [degC]" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
+
+  #png("to_gsms.png")
+  p2 <- qplot(time, TAT, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Total Air Temperature [degC]" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+
+  png("to_flxtemp.png", width=960)
+  p1 <- qplot(time, FLX1_TEMP, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Flex Temperature [degC]" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  #dev.off()
+
+  #png("to_gsms.png")
+  p2 <- qplot(time, FLX2_TEMP, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Flex Temperature [degC]" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+
   png("to_gs.png", width=960)
   p1 <- qplot(time, GS, data=data_takeoff,  col=I("blue"),
              xlab="Time [seconds]",  ylab="Ground Speed [Knot]" ,geom=c("line"), size=I(1)) +
@@ -303,6 +540,7 @@ to_plots <- function(){
              geom_vline(xintercept=rot, color="green", size=1)
   print(p)
   dev.off()
+
 
   png("to_pitch_cpt.png", width=960)
   p1 <- qplot(time, PITCH_CPT, data=data_takeoff,  col=I("blue"),
@@ -495,7 +733,7 @@ arrange <- function(..., nrow=NULL, ncol=NULL, as.table=FALSE) {
 
 ##################################################### MAIN
 ### Choose the type of analysis:
-###  * set 1 in the report desired
+###  * set = 1 at the report desired (both =1 allowed)
 ###    
 take_off_study = 1
 landing_study = 0
@@ -504,6 +742,8 @@ landing_study = 0
 ## Constants
 c_knot_ms <- 1852/3600
 c_ms_kmh <- 3.6
+area <- 138 # [m^2] - surface of the wing with flaps 
+
 
 ## paths
 flightpath <- "C:/FlightDB/TTD"    ## Insert case into the respective folder
@@ -577,23 +817,47 @@ s=10
     q2 <- approx(seq(1:nrows), flightdata$Q2,xout=c(1:nrows), method="linear",n=nrows)$y
     pt1 <- approx(seq(1:nrows), flightdata$PT1,xout=c(1:nrows), method="linear",n=nrows)$y
     pt2 <- approx(seq(1:nrows), flightdata$PT2,xout=c(1:nrows), method="linear",n=nrows)$y
-    
+    tla1 <- approx(seq(1:nrows), flightdata$TLA1,xout=c(1:nrows), method="linear",n=nrows)$y
+    tla1c <- approx(seq(1:nrows), flightdata$TLA1C,xout=c(1:nrows), method="linear",n=nrows)$y
+    tla2 <- approx(seq(1:nrows), flightdata$TLA2,xout=c(1:nrows), method="linear",n=nrows)$y
+    tla2c <- approx(seq(1:nrows), flightdata$TLA2C,xout=c(1:nrows), method="linear",n=nrows)$y
+    sat <- approx(seq(1:nrows), flightdata$SAT,xout=c(1:nrows), method="linear",n=nrows)$y
+    tat <- approx(seq(1:nrows), flightdata$TAT,xout=c(1:nrows), method="linear",n=nrows)$y
+    p0_1 <- approx(seq(1:nrows), flightdata$P0_1,xout=c(1:nrows), method="linear",n=nrows)$y
+    p0_2 <- approx(seq(1:nrows), flightdata$P0_2,xout=c(1:nrows), method="linear",n=nrows)$y
+    p2_1 <- approx(seq(1:nrows), flightdata$P2_1,xout=c(1:nrows), method="linear",n=nrows)$y
+    p2_2 <- approx(seq(1:nrows), flightdata$P2_2,xout=c(1:nrows), method="linear",n=nrows)$y
+    p31 <- approx(seq(1:nrows), flightdata$P31,xout=c(1:nrows), method="linear",n=nrows)$y
+    p32 <- approx(seq(1:nrows), flightdata$P32,xout=c(1:nrows), method="linear",n=nrows)$y
+    t12_1 <- approx(seq(1:nrows), flightdata$T12_1,xout=c(1:nrows), method="linear",n=nrows)$y
+    t12_2 <- approx(seq(1:nrows), flightdata$T12_2,xout=c(1:nrows), method="linear",n=nrows)$y
+    t25_1 <- approx(seq(1:nrows), flightdata$T25_1,xout=c(1:nrows), method="linear",n=nrows)$y
+    t25_2 <- approx(seq(1:nrows), flightdata$T25_2,xout=c(1:nrows), method="linear",n=nrows)$y
+
+# sempre a zero!????
+#ps13_1<- approx(seq(1:nrows), flightdata$PS13_1,xout=c(1:nrows), method="linear",n=nrows)$y
+#ps13_2 <- approx(seq(1:nrows), flightdata$PS13_2,xout=c(1:nrows), method="linear",n=nrows)$y
+
+
+    vrtg <- flightdata$VRTG
     #flight_phase <- approx(seq(1:nrows), flightdata$FLIGHT_PHASE,xout=c(1:nrows), method="linear",n=nrows)$y
     #apflare <- approx(seq(1:nrows), flightdata$APFLARE,xout=c(1:nrows), method="linear",n=nrows)$y
 
-### Acrescentar
-###    
-# "T12_1"    "T12_2"  "T25_1"          "T25_2"          "T31" 
-# "P0_1"           "P0_2"          
-#  "P2_1"           "P2_2"           "P31"            "P32"            "PS13_1"        
-# "PS13_2" 
-#
-  vrtg <- flightdata$VRTG
 
 ## Support calcs and figs
+# colocar mais tarde nos "flight_measurements"
+orig <- which(!flightdata$ORIGIN=="")
+origin <- flightdata$ORIGIN[orig[1000]]
 
-#table(flightdata$FM_FWC)
-#plot(gs[t0:t1],type="l",col="blue")
+dest <- which(!flightdata$DESTINATION=="")
+destination <- flightdata$DESTINATION[dest[1000]]
+
+dat <- which(!flightdata$DATE=="")
+dat <- flightdata$DATE[dat[1000]]
+
+rwhdg <- which(!flightdata$RUNWAY_TO=="")
+rwhdg <- flightdata$RUNWAY_TO[rwhdg[1000]]
+##
 
 
 if(take_off_study==1){
