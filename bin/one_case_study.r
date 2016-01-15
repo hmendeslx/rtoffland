@@ -755,18 +755,19 @@ arrange <- function(..., nrow=NULL, ncol=NULL, as.table=FALSE) {
 #### START 
 #################################################################################
 ### Choose the type of analysis:
-###  * set = 1 at the report desired (both =1 allowed)
+###  * set = 1 at the report desired (both =1 is allowed!!)
 #################################################################################
 take_off_study = 1
 landing_study = 0
-
+#################################################################################
 ## Constants
 c_knot_ms <- 1852/3600
 c_ms_kmh <- 3.6
 area <- 138 # [m^2] - surface of the wing with flaps 
 
 ## paths
-flightpath <- "C:/FlightDB/TTD"    ## Insert case into the respective folder
+#flightpath <- "C:/FlightDB/TTD"    ## Insert case into the respective folder
+flightpath <- "C:/FlightDB/A319"    ## Insert case into the respective folder
 binpath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/bin"
 resultpath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/results"
 figurepath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/results/figures"
@@ -777,10 +778,10 @@ fileList <- list.files(path=flightpath, pattern=".csv")
 
 ## Escolher o ficheiro pelo nº "s"
 #s = 1
-s=10
+#s=10
 
 # alternativa - fazer o enable deste ciclo FOR para todos os ficheiros do folder
-#for (s in 1:NROW(fileList)) {
+for (s in 1:NROW(fileList)) {
 
 # Variable and Vector Initialization
 #
@@ -890,5 +891,5 @@ if(landing_study==1){
 }
 
 
-#}
+}
 
