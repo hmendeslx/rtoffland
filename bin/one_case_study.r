@@ -276,8 +276,6 @@ to_plots <- function(){
   arrange(p1,p2)
   dev.off()
 
-
-
   png("to_p2.png", width=960)
   p1 <- qplot(time, P2_1, data=data_takeoff,  col=I("blue"),
             xlab="Time [seconds]",geom=c("line"), size=I(1)) +
@@ -537,7 +535,7 @@ to_plots <- function(){
   
   png("to_long.png", width=960)
   p1 <- qplot(time, LONG, data=data_takeoff,  col=I("blue"),
-             xlab="Time [seconds]", ylab="LONG [g]" ,geom=c("line"), size=I(1)) +
+             xlab="Time [seconds]", ylab="LONG [g]", ylim=c(-0.05,0.35) ,geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) + 
              geom_vline(xintercept=rot, color="green", size=1)
   #print(p)
@@ -545,7 +543,7 @@ to_plots <- function(){
 
   #png("to_gsdot.png")
   p2 <- qplot(time, GSDOT_FILT, data=data_takeoff,  col=I("blue"),
-           xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+           xlab="Time [seconds]", ylim=c(-0.05,0.35), geom=c("line"), size=I(1)) +
            geom_vline(xintercept=loff_sec, color="dark red", size=1) + 
            geom_vline(xintercept=rot, color="green", size=1)
   #print(p)
