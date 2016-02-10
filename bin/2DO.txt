@@ -10,10 +10,14 @@ ps13_1 e ps13_2
 dão sempre valor zero!!
 
 P25_1 e P25_2 não estão a ser gravados
-ECU/262
+ECU/262/xx
 
+PB_1
+PB_2
+ECU/264/xx
+Não está 
 
-* Cálculo de consumo @TOff através do FF
+* Cálculo de consumo @TOff através do FF - comparar com a perda de GW[Kg]
 
 ####
 * escala de tempo trab BAC e este relatório?? Voos diferentes! Erro em algum dos trabalhos?

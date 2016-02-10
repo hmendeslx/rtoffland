@@ -1,3 +1,7 @@
+http://simecol.r-forge.r-project.org/
+http://www.magesblog.com/2012/06/dynamical-systems-in-r-with-simecol.html
+
+###
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/nlm.html
 http://www.pdas.com/
 
