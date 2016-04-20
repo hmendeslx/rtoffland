@@ -9,8 +9,10 @@ autoland_neo.tex
 *.docx
 *.xlsx
 test*.r
-*.tex
+Rtoffrep*.tex
+autorep*.tex
 *.aux
 *.out
 *.zip
 *.xps
+*.gz

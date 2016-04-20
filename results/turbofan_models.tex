@@ -1,0 +1,44 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\author{Hélder Mendes}
+\title{Turbofan Engine Models}
+\begin{document}
+
+\section{Turbofan Engine Model }
+
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=10cm,scale=1]{figures/engine_model.png}
+\caption{xxxxxx}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\textbf{Modelo:} \\
+
+
+%\begin{center}
+\begin{equation}
+X_{kp} = A \cdot X_{k-1} + B \cdot \underline{u_{k}} + \underline{w_{k}}
+\label{new_prediction}
+\end{equation}
+%\end{center}
+
+\vspace{2cm}
+
+\textbf{Perguntas:} 
+
+\begin{itemize}
+\item usar o state vector igual aos measurements? ( X = Y ?) 
+\item Os parâmetros de motor que não estão a ser gravados (em falta), não podem fazer parte dos measurements, mas podem ser considerados nas variáveis de estado? Neste caso seriam variáveis escondidas...
+\end{itemize}
+
+
+\end{document}

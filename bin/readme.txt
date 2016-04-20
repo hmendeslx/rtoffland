@@ -1,9 +1,9 @@
-Main File(s):
-	* one_case_study.r -> mais desenvolvido em Dez 2015
-	* Rtoff.r -> deverá ser a versão final
 
 1)
 take-off performance tool
+
+main file = Rtoffland.R
+
 
 Scope:
 - desde aplicação de potencia de Take-Off
