@@ -59,7 +59,7 @@ derivative <- function(vector,time_interval) {
   return(f_derivative)
 }
 
-
+## acrescentar Gaussian smooth
 
 
 #################################################
@@ -124,6 +124,7 @@ for (s in 1:total_flights) {
     
 ## Interpolations
     pitch <- approx(seq(1:nrows), flightdata$PITCH,xout=c(1:nrows), method="linear",n=nrows)$y
+ff1 <- approx(seq(1:nrows), flightdata$FF1,xout=c(1:nrows), method="linear",n=nrows)$y
     alt_std <- approx(seq(1:nrows), flightdata$ALT_STD,xout=c(1:nrows), method="linear",n=nrows)$y
     ptcr <- approx(seq(1:nrows), flightdata$PTCR,xout=c(1:nrows), method="linear",n=nrows)$y
     raltd1 <- approx(seq(1:nrows), flightdata$RALTD1,xout=c(1:nrows), method="linear",n=nrows)$y
@@ -144,6 +145,7 @@ for (s in 1:total_flights) {
     aoal <- approx(seq(1:nrows), flightdata$AOAL,xout=c(1:nrows), method="linear",n=nrows)$y
     aoar <- approx(seq(1:nrows), flightdata$AOAR,xout=c(1:nrows), method="linear",n=nrows)$y
     n11 <- approx(seq(1:nrows), flightdata$N11C,xout=c(1:nrows), method="linear",n=nrows)$y
+n21 <- approx(seq(1:nrows), flightdata$N21C,xout=c(1:nrows), method="linear",n=nrows)$y
     n12 <- approx(seq(1:nrows), flightdata$N12C,xout=c(1:nrows), method="linear",n=nrows)$y
     apflare <- approx(seq(1:nrows), flightdata$APFLARE,xout=c(1:nrows), method="linear",n=nrows)$y
     gsdev1_mddm <- approx(seq(1:nrows), flightdata$GSDEV1_MDDM,xout=c(1:nrows), method="linear",n=nrows)$y

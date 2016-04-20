@@ -1,0 +1,93 @@
+\documentclass{article}
+
+% Page geometry
+\usepackage{color} 
+\usepackage{geometry}
+\geometry{
+  margin=0.5in,% Equal margin of 0.5in from all four sides
+  includefoot% Include only the footer in the margin calculations, since you don't have a header
+}
+
+% Header/footer
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}% Page style will be fancy
+\fancyhf{}% Clear headers and footers
+\renewcommand{\headrulewidth}{0pt}% No header rule
+%\renewcommand{\footrulewidth}{0pt}% No footer rule (default)
+\fancyfoot[L]{FDM Dept \quad - \quad \href{mailto:hmendes@tap.pt}{{\small hmendes@tap.pt}}}
+\fancyfoot[C]{\textit{Autoland Report}}
+\fancyfoot[R]{\thepage\ of \pageref{LastPage}}
+
+\usepackage{hyperref,graphicx,lipsum}
+
+\setlength{\parindent}{0pt}% No paragraph indentation
+\setlength{\parskip}{.5\baselineskip plus 0.1\baselineskip minus 0.1\baselineskip}
+
+\begin{document}
+
+\includegraphics[width=2in]{tap.png}% Logo
+
+\bigskip
+%
+%\null\hfill% FROM details
+%\begin{tabular}{@{}l@{}}
+%  \today \\[\normalbaselineskip]
+%  123 Broadway \\
+%  City, State 12345 \\
+%  Telephone (000) 111-1111 \\
+%  Email \href{mailto:john@smith.com}{john@smith.com}
+%\end{tabular}
+%
+%\bigskip
+%
+%% TO details
+%\begin{tabular}{@{}l@{}}
+%  Mrs.\ Jane Smith \\
+%  Recruitment Officer \\
+%  The Corporation \\
+%  123 Pleasant Lane \\
+%  City, State 12345
+%\end{tabular}
+%
+%\bigskip
+
+\hrulefill
+
+\begin{center}
+\begin{huge}
+\textbf{\textcolor{blue}{Autoland Analysis Report}}\\
+%\textcolor{blue}{\textbf{Autoland Analysis Report}}
+\end{huge}
+\begin{Large}
+\vspace{0.5cm}
+\textbf{Flight Data Monitoring Dept.}\\
+\vspace{0.3cm}
+\textbf{TA/SM/FD}
+\end{Large}
+\end{center}
+
+
+\hrulefill
+
+%Dear Mrs.\ Smith,
+
+\bigskip
+
+%\section*{Measurements}
+\begin{LARGE}
+\textbf{\textcolor{blue}{Measurements}}
+\end{LARGE}
+
+%\textbf{\textcolor{blue}{Measurements}}
+
+\begin{verbatim}
+FLIGHT: CS-TTD_20150203_860446.csv
+\end{verbatim}
+
+
+%
+\begin{table}[h!]
+%\caption{Measurements 1}
+\begin{center}
+\begin{tabular}{|l||l|}
+\hline \bf Maximum Vertical Acceleration [g] &  

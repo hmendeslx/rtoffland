@@ -135,7 +135,7 @@ Report Date: \today
 
 
 \begin{Large}
-\qquad \textbf{\textcolor{blue}{Flight Graphics}}
+\qquad \textbf{\textcolor{blue}{Flight Graphics - Time Series}}
 \end{Large}
 %\textbf{\textcolor{blue}Graphics}}
 
@@ -269,6 +269,16 @@ Report Date: \today
 \end{center}
 \end{figure}
 
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_tla_ang.png}
+\caption{Thust Lever Angle [degree]}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_tla.png}
@@ -358,6 +368,83 @@ Report Date: \today
 %\label{vrtg}
 \end{center}
 \end{figure}
+
+
+\clearpage
+\newpage
+\begin{Large}
+\qquad \textbf{\textcolor{blue}{Flight Graphics - Parameter's Correlations}}
+\end{Large}
+
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=12cm,scale=1]{figures/tlavsff_eng1.png}
+\caption{FF1 = f(TLA1)}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=12cm,scale=1]{figures/tlavsff_eng2.png}
+\caption{FF2 = f(TLA2)}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+%##$##
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=12cm,scale=1]{figures/ffvsn2_eng1.png}
+\caption{N21 = f(FF1)}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=12cm,scale=1]{figures/ffvsn2_eng2.png}
+\caption{N22 = f(FF2)}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=12cm,scale=1]{figures/n1vsn2_eng1.png}
+\caption{N11 = f(N21)}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=12cm,scale=1]{figures/n1vsn2_eng2.png}
+\caption{N12 = f(N22)}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+
+\include{tlavsff_eng1}
+\include{tlavsff_eng1}
+\include{ffvsn2_eng1}
+\include{ffvsn2_eng2}
+\include{n1vsn2_eng1}
+\include{n1vsn2_eng2}
+
+
+\include{N21est}
+\include{N22est}
+
 
 
 %\lipsum[1-10]% You letter

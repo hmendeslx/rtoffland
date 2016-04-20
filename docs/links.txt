@@ -1,3 +1,8 @@
+T-MATS
+NASA Turbofan simul
+
+
+
 http://simecol.r-forge.r-project.org/
 http://www.magesblog.com/2012/06/dynamical-systems-in-r-with-simecol.html
 
@@ -21,3 +26,6 @@ http://stackoverflow.com/questions/2563632/how-can-i-merge-two-commits-into-one
 
 ## copoulas -> detect variable correlations
 http://www.r-bloggers.com/easily-generate-correlated-variables-from-any-distribution-without-copulas/
+
+## NLR
+http://www.nlr.org/capabilities/gas-turbines/

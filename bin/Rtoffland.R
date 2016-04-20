@@ -10,7 +10,6 @@
 #
 #
 
-
 # Clean workspace (& environment data)
 rm(list=ls(all=TRUE))
 
@@ -37,6 +36,19 @@ testpar <- function(str){
   }
   return(name)
 }
+
+
+panel.cor <- function(x, y, digits=2, prefix="", cex.cor, ...)
+{
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(0, 1, 0, 1))
+  r <- abs(cor(x, y))
+  txt <- format(c(r, 0.123456789), digits=digits)[1]
+  txt <- paste(prefix, txt, sep="")
+  if(missing(cex.cor)) cex.cor <- 1.5/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor )#* r)
+}
+
 
 
 # derivative of a vector
@@ -80,7 +92,7 @@ to_plots <- function(){
   time <- c(0,seq(t1-t0)/8)
 
   # filtering gs_dot
-  gsdot.loess <- loess(y ~x, span=0.1, data.frame(x=time, y=gs_dot))
+  gsdot.loess <- loess(y ~ x, span=0.1, data.frame(x=time, y=gs_dot))
   gsdot.filtered <- predict(gsdot.loess, data.frame(x=time))
   
   long_ms2 <- long[t0:t1]*9.8
@@ -93,7 +105,7 @@ to_plots <- function(){
                       pitch_cpt[t0:t1],pitch_fo[t0:t1],pitch[t0:t1],
                       ptcr[t0:t1], gs_ms, gs_dot, gsdot.filtered, long_ms2,
                       flx1_temp[t0:t1], flx2_temp[t0:t1],sat[t0:t1],
-                      tat[t0:t1], tla1c[t0:t1], tla2c[t0:t1],
+                      tat[t0:t1], tla1c[t0:t1], tla2c[t0:t1], tla1[t0:t1], tla2[t0:t1],
                       q1[t0:t1], q2[t0:t1], pt1[t0:t1], pt2[t0:t1],
                       p0_1[t0:t1], p0_2[t0:t1], gw1kg[t0:t1],
                       p2_1[t0:t1], p2_2[t0:t1],p31[t0:t1], p32[t0:t1],
@@ -104,7 +116,8 @@ to_plots <- function(){
                            "FF1", "FF2", "RALTD2", "EGT1", "EGT2", "LONG",
                            "PTCR_DOT","PITCH_CPT","PITCH_FO", "PITCH",
                            "PTCR", "GS_MS", "GS_DOT", "GSDOT_FILT", "LONG_MS2",
-                           "FLX1_TEMP", "FLX2_TEMP", "SAT", "TAT", "TLA1", "TLA2",
+                           "FLX1_TEMP", "FLX2_TEMP", "SAT", "TAT", 
+                           "TLA1C", "TLA2C", "TLA1", "TLA2",
                            "Q1", "Q2", "PT1", "PT2", "P0_1", "P0_2", "GW1KG",
                            "P2_1", "P2_2", "P31", "P32", "T12_1", "T12_2",
                            "T25_1", "T25_2", "HDG", "FM_FWC", "ALT_STD")
@@ -115,7 +128,8 @@ to_plots <- function(){
                 "aircraft","aircraft","aircraft","aircraft","aircraft",
                 "aircraft","aircraft","aircraft","calcul","aircraft",
                 "aircraft","aircraft","aircraft","calcul","calcul","calcul","calcul",
-                "aircraft","aircraft","aircraft", "aircraft","aircraft", "aircraft",
+                "aircraft","aircraft","aircraft", "aircraft",
+                "calcul", "calcul", "aircraft","aircraft",
                 "aircraft","aircraft", "aircraft","aircraft", "aircraft",
                 "aircraft", "aircraft","aircraft", "aircraft","aircraft", "aircraft",
                 "aircraft", "aircraft","aircraft", "aircraft","aircraft","aircraft",
@@ -147,8 +161,10 @@ to_plots <- function(){
                  "Flex temperature System 2",
                  "Static Air Temperature",
                  "Total Air Temperature",
-                 " Thrust Lever Angle Eng 1",
-                 " Thrust Lever Angle Eng 2",
+                 "Thrust Lever Position Eng 1",
+                 "Thrust Lever Position Eng 2",
+                 "Thrust Lever Angle Eng 1",
+                 "Thrust Lever Angle Eng 2",
                  "Dinamic Pressure Sys 1 [mBar]",
                  "Dinamic Pressure Sys 2 [mBar]",
                  "Total Pressure Sys 1 [mBar]",
@@ -202,16 +218,16 @@ to_plots <- function(){
   loff_sec <- loff/8 # in seconds
 
   # Rotation point
-  rot <- min(which(ptcr[t0:t1]>1))
-  rotation_time <- (loff - rot)/8 
-  rot <- rot/8 # seconds
+  rot_sample <- min(which(ptcr[t0:t1]>1))
+  rotation_time <- (loff - rot_sample)/8 
+  rot <- rot_sample/8 # seconds
 
   # Values to include in the report 
   # integrar mais tarde em "flight_measurements"
   flxtemp1 <- round(data_takeoff$FLX1_TEMP[(t1-t0)/2],1)
   flxtemp2 <- round(data_takeoff$FLX2_TEMP[(t1-t0)/2],1)
-  tla1_pos <- data_takeoff$TLA1[2*(t1-t0)/3]
-  tla2_pos <- data_takeoff$TLA2[2*(t1-t0)/3]
+  tla1_pos <- data_takeoff$TLA1C[2*(t1-t0)/3]
+  tla2_pos <- data_takeoff$TLA2C[2*(t1-t0)/3]
   gw_ini <- data_takeoff$GW1KG[1]
   gw_final <- data_takeoff$GW1KG[(t1-t0)+1]
   fuel_gw <- gw_ini - gw_final
@@ -221,7 +237,6 @@ to_plots <- function(){
   # Fast Testing Command:
   # > with(data_takeoff, plot(FF1, N21, type="l", col="blue")); grid(,,col="dark red")
   setwd(figurepath)
-
 
   png("to_t25.png", width=960)
   p1 <- qplot(time, T25_1, data=data_takeoff,  col=I("blue"),
@@ -374,19 +389,34 @@ to_plots <- function(){
 
 
   png("to_tla.png", width=960)
-  p1 <- qplot(time, TLA1, data=data_takeoff,  col=I("blue"),
-            xlab="Time [seconds]",  ylab="Thrust Lever Eng 1" ,geom=c("line"), size=I(1)) +
+  p1 <- qplot(time, TLA1C, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Thrust Lever Position Eng 1" ,geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
   #print(p)
   #dev.off()
 
   #png("to_gsms.png")
-  p2 <- qplot(time, TLA2, data=data_takeoff,  col=I("blue"),
-            xlab="Time [seconds]",  ylab="Thrust Lever Eng 2" ,geom=c("line"), size=I(1)) +
+  p2 <- qplot(time, TLA2C, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Thrust Lever Position Eng 2" ,geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
   #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+
+  png("to_tla_ang.png", width=960)
+  p1 <- qplot(time, TLA1, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Thrust Lever Angle Eng 1" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+
+  p2 <- qplot(time, TLA2, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",  ylab="Thrust Lever Angle Eng 2" ,geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+#print(p)
   arrange(p1,p2)
   dev.off()
 
@@ -595,14 +625,166 @@ to_plots <- function(){
   print(p)
   dev.off()
 
+  # Correlation of several parameters
 
-  
+  #setwd(figurepath)
+#   png("ffvsn2.png", width=1500)
+#   #p1 <- qplot(FF1,N21,data=data_takeoff,col=I("red"))
+#   p1 <- ggplot(data=data_takeoff, aes(x=FF1, y=N21)) + geom_point(color="red", size=3) + theme(text = element_text(size=25))
+#   #
+#   p2 <- ggplot(data=data_takeoff, aes(x=FF2, y=N22)) + geom_point(color="red", size=3) + theme(text = element_text(size=25))
+#   arrange(p1,p2)
+#   dev.off()
+# 
+#   png("n2vsn1.png", width=1500)
+#   #p1 <- ggplot(data=data_takeoff, aes(x=N21, y=N11)) + geom_point(col=I("red")) + theme(text = element_text(size=25))
+#   p1 <- ggplot(data=data_takeoff, aes(x=N21, y=N11)) + geom_point(color="blue",size=3) + theme(text = element_text(size=25))
+#   #
+#   p2 <- ggplot(data=data_takeoff, aes(x=N22, y=N12)) + geom_point(color="blue",size=3) + theme(text = element_text(size=25))
+#   arrange(p1,p2)
+#   dev.off()
+
+  png("tlavsff_eng1.png") #
+  with(data_takeoff, plot( TLA1, FF1, type="l", col="blue", lwd=1.5))
+  regress <- lm(FF1 ~ TLA1, data_takeoff)
+  sum_reg <- summary(regress)
+  abline(regress, col="red")
+  legend("topleft", paste("R^2 = ", round(sum_reg$r.squared,3)))
+  grid(,,"dark red")
+  dev.off()
+
+  setwd(resultpath)
+  line1 <- paste("\\","begin{verbatim}",sep="")
+  write(line1, file="tlavsff_eng1.tex")
+  capture.output(sum_reg, file="tlavsff_eng1.tex", append=TRUE)
+  line2 <- paste("\\","end{verbatim}",sep="")
+  write(line2, file="tlavsff_eng1.tex", append=TRUE)
+  setwd(figurepath)
+
+  png("tlavsff_eng2.png")
+  with(data_takeoff, plot( TLA2, FF2, type="l", col="blue", lwd=1.5))
+  regress <- lm(FF2 ~ TLA2, data_takeoff)
+  sum_reg <- summary(regress)
+  abline(regress, col="red")
+  legend("topleft", paste("R^2 = ", round(sum_reg$r.squared,3)))
+  grid(,,"dark red")
+  dev.off()
+
+  setwd(resultpath)
+  line1 <- paste("\\","begin{verbatim}",sep="")
+  write(line1, file="tlavsff_eng2.tex")
+  capture.output(sum_reg, file="tlavsff_eng2.tex", append=TRUE)
+  line2 <- paste("\\","end{verbatim}",sep="")
+  write(line2, file="tlavsff_eng2.tex", append=TRUE)
+  setwd(figurepath)
+
+
+  png("ffvsn2_eng1.png") #
+  with(data_takeoff, plot( FF1, N21, type="l", col="blue", lwd=1.5))
+  regress <- lm(N21 ~ FF1, data_takeoff)
+  sum_reg <- summary(regress)
+  abline(regress, col="red")
+  legend("topleft", paste("R^2 = ", round(sum_reg$r.squared,3)))
+  grid(,,"dark red")
+  dev.off()
+
+  setwd(resultpath)
+  line1 <- paste("\\","begin{verbatim}",sep="")
+  write(line1, file="ffvsn2_eng1.tex")
+  capture.output(sum_reg, file="ffvsn2_eng1.tex", append=TRUE)
+  line2 <- paste("\\","end{verbatim}",sep="")
+  write(line2, file="ffvsn2_eng1.tex", append=TRUE)
+  setwd(figurepath)
+
+##$##
+
+  png("ffvsn2_eng2.png") #
+  with(data_takeoff, plot( FF2, N22, type="l", col="blue", lwd=1.5))
+  regress <- lm(N22 ~ FF2, data_takeoff)
+  sum_reg <- summary(regress)
+  abline(regress, col="red")
+  legend("topleft", paste("R^2 = ", round(sum_reg$r.squared,3)))
+  grid(,,"dark red")
+  dev.off()
+
+  setwd(resultpath)
+  line1 <- paste("\\","begin{verbatim}",sep="")
+  write(line1, file="ffvsn2_eng2.tex")
+  capture.output(sum_reg, file="ffvsn2_eng2.tex", append=TRUE)
+  line2 <- paste("\\","end{verbatim}",sep="")
+  write(line2, file="ffvsn2_eng2.tex", append=TRUE)
+  setwd(figurepath)
+
+
+  png("n1vsn2_eng1.png") #
+  with(data_takeoff, plot( N21, N11, type="l", col="blue", lwd=1.5))
+  regress <- lm(N11 ~ N21, data_takeoff)
+  sum_reg <- summary(regress)
+  abline(regress, col="red")
+  legend("topleft", paste("R^2 = ", round(sum_reg$r.squared,3)))
+  grid(,,"dark red")
+  dev.off()
+
+  setwd(resultpath)
+  line1 <- paste("\\","begin{verbatim}",sep="")
+  write(line1, file="n1vsn2_eng1.tex")
+  capture.output(sum_reg, file="n1vsn2_eng1.tex", append=TRUE)
+  line2 <- paste("\\","end{verbatim}",sep="")
+  write(line2, file="n1vsn2_eng1.tex", append=TRUE)
+  setwd(figurepath)
+
+
+  png("n1vsn2_eng2.png") #
+  with(data_takeoff, plot( N22, N12, type="l", col="blue", lwd=1.5))
+  regress <- lm(N12 ~ N22, data_takeoff)
+  sum_reg <- summary(regress)
+  abline(regress, col="red")
+  legend("topleft", paste("R^2 = ", round(sum_reg$r.squared,3)))
+  grid(,,"dark red")
+  dev.off()
+
+  setwd(resultpath)
+  line1 <- paste("\\","begin{verbatim}",sep="")
+  write(line1, file="n1vsn2_eng2.tex")
+  capture.output(sum_reg, file="n1vsn2_eng2.tex", append=TRUE)
+  line2 <- paste("\\","end{verbatim}",sep="")
+  write(line2, file="n1vsn2_eng2.tex", append=TRUE)
+#  setwd(figurepath)
+
+
+  N21_estimate <- lm(N21 ~ FF1 + TLA1 + SAT, data_takeoff)
+  N21est <- summary(N21_estimate)
+  line1 <- paste("\\","begin{verbatim}",sep="")
+  write(line1, file="N21est.tex")
+  capture.output(N21est, file="N21est.tex", append=TRUE)
+  line2 <- paste("\\","end{verbatim}",sep="")
+  write(line2, file="N21est.tex", append=TRUE)
+
+  N22_estimate <- lm(N22 ~ FF2 + TLA2 + SAT, data_takeoff)
+  N22est <- summary(N22_estimate)
+  line1 <- paste("\\","begin{verbatim}",sep="")
+  write(line1, file="N22est.tex")
+  capture.output(N22est, file="N22est.tex", append=TRUE)
+  line2 <- paste("\\","end{verbatim}",sep="")
+  write(line2, file="N22est.tex", append=TRUE)
+
+
+  #teste <- print(xtable(unlist(N2est$coefficient), format="latex"), include.rownames=TRUE, size="scriptsize") 
+  #teste1 <- print(xtablne(as.matrix(N2est$terms), format="latex"), include.rownames=TRUE, size="scriptsize") 
+
+
+  #print.sumreg <- print(xtable(sum_reg, format="latex"), include.rownames=FALSE, size="scriptsize") 
+
+  # Pais Testing
+  #pairs(~N21+N11+FF1+EGT1+P0_1+P2_1+P31+T12_1+T25_1, data=data_takeoff, pch=20, col="blue", lower.panel=panel.smooth, upper.panel=panel.cor)
+
   # PDF Reporting
   #setwd(binpath)
-  setwd(resultpath)
+#  setwd(resultpath)
   brew("Rtoffrep.brew", paste0('Rtoffrep',s,".tex"))
   texi2dvi(paste0('Rtoffrep',s,".tex"), pdf = TRUE)
   ##$##  
+
 }
 
 landing_plots <- function(){
@@ -721,8 +903,8 @@ landing_plots <- function(){
   # PDF Reporting
   #setwd(binpath)
   setwd(resultpath)
-  brew("autorep.brew", paste0('autorep',s,".tex"))
-  texi2dvi(paste0('autorep',s,".tex"), pdf = TRUE)
+  brew("Rlandrep.brew", paste0('Rlandrep',s,".tex"))
+  texi2dvi(paste0('Rlandrep',s,".tex"), pdf = TRUE)
     
 }
 
@@ -775,7 +957,7 @@ fileList <- list.files(path=flightpath, pattern=".csv")
 
 ## Escolher o ficheiro pelo nº "s"
 #s = 1
-s=10
+s=12
 
 # alternativa - fazer o enable deste ciclo FOR para todos os ficheiros do folder
 #for (s in 1:NROW(fileList)) {
@@ -793,7 +975,6 @@ s=10
                       colClasses = c(ACT='character', AC_TYPE='character', ORIGIN='character', 
                       RUNWAY_TO='character', RUNWAY_LD='character', DESTINATION='character', 
                       DATE='Date')) 
-  
   
     nrows <- NROW(flightdata)
         
