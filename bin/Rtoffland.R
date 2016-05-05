@@ -78,6 +78,8 @@ to_plots <- function(){
   # Take-Off Start and End Points determination
   t0 <- min(which(flightdata$FM_FWC==3)) - 200
   t1 <- max(which(flightdata$FM_FWC==4)) + 50
+  #t1 <- max(which(flightdata$FM_FWC==4)) + 500
+  #t1 <- max(which(flightdata$FM_FWC==4)) + 1500
   
   ptcr_dot <-derivative(ptcr[t0:t1],NROW(ptcr[t0:t1]))
   gs_ms <- gs[t0:t1]*c_knot_ms
@@ -97,7 +99,6 @@ to_plots <- function(){
   
   long_ms2 <- long[t0:t1]*9.8
   
-  ##$##
   data_takeoff <- as.data.frame(cbind(time, gs[t0:t1],raltd1[t0:t1],
                       n11[t0:t1], n21[t0:t1],n12[t0:t1], n22[t0:t1],
                       ff1[t0:t1], ff2[t0:t1], raltd2[t0:t1],
@@ -110,7 +111,8 @@ to_plots <- function(){
                       p0_1[t0:t1], p0_2[t0:t1], gw1kg[t0:t1],
                       p2_1[t0:t1], p2_2[t0:t1],p31[t0:t1], p32[t0:t1],
                       t12_1[t0:t1], t12_2[t0:t1],t25_1[t0:t1], t25_2[t0:t1],
-                      head_mag[t0:t1], fm_fwc[t0:t1], alt_std[t0:t1]))
+                      head_mag[t0:t1], fm_fwc[t0:t1], alt_std[t0:t1], vrtg[t0:t1],
+                      fpac[t0:t1])) #
   
   names(data_takeoff) <- c("time", "GS", "RALTD1", "N11", "N21", "N12", "N22",
                            "FF1", "FF2", "RALTD2", "EGT1", "EGT2", "LONG",
@@ -120,7 +122,8 @@ to_plots <- function(){
                            "TLA1C", "TLA2C", "TLA1", "TLA2",
                            "Q1", "Q2", "PT1", "PT2", "P0_1", "P0_2", "GW1KG",
                            "P2_1", "P2_2", "P31", "P32", "T12_1", "T12_2",
-                           "T25_1", "T25_2", "HDG", "FM_FWC", "ALT_STD")
+                           "T25_1", "T25_2", "HDG", "FM_FWC", "ALT_STD", "VRTG",
+                           "FPAC")
   
   # Parameter Description
   par.names <- as.vector(names(data_takeoff))
@@ -133,7 +136,7 @@ to_plots <- function(){
                 "aircraft","aircraft", "aircraft","aircraft", "aircraft",
                 "aircraft", "aircraft","aircraft", "aircraft","aircraft", "aircraft",
                 "aircraft", "aircraft","aircraft", "aircraft","aircraft","aircraft",
-                "aircraft")
+                "aircraft","aircraft","aircraft")
   
   par.descr <- c("time [second]", 
                  "Ground Speed [knot]", 
@@ -182,7 +185,9 @@ to_plots <- function(){
                  "LPC Exit Temp Eng 1 [degC]",
                  "Magnetic Heading [deg]",
                  "Flight Phase ( From FWC)",
-                 "Altitude Standard [ft]")
+                 "Altitude Standard [ft]",
+                 "Vertical Acceleration [g]",
+                 "Flight Path Acceleration")
   
   par.print <- as.data.frame(cbind(par.names, par.descr, par.origin))
   names(par.print) <- c("Menemonic", "Description", "Origin")
@@ -224,16 +229,17 @@ to_plots <- function(){
 
   # Values to include in the report 
   # integrar mais tarde em "flight_measurements"
-  flxtemp1 <- round(data_takeoff$FLX1_TEMP[(t1-t0)/2],1)
-  flxtemp2 <- round(data_takeoff$FLX2_TEMP[(t1-t0)/2],1)
-  tla1_pos <- data_takeoff$TLA1C[2*(t1-t0)/3]
-  tla2_pos <- data_takeoff$TLA2C[2*(t1-t0)/3]
+  flxtemp1 <- round(data_takeoff$FLX1_TEMP[rot_sample],1)
+  flxtemp2 <- round(data_takeoff$FLX2_TEMP[rot_sample],1)
+  tla1_pos <- data_takeoff$TLA1C[rot_sample]
+  tla2_pos <- data_takeoff$TLA2C[rot_sample]
   gw_ini <- data_takeoff$GW1KG[1]
   gw_final <- data_takeoff$GW1KG[(t1-t0)+1]
   fuel_gw <- gw_ini - gw_final
+  time_considered <- (t1-t0)/8
   # calculo de consumo através do FF - comparar com o de cima
 
-  # Graphics ##$##
+  # Graphics
   # Fast Testing Command:
   # > with(data_takeoff, plot(FF1, N21, type="l", col="blue")); grid(,,col="dark red")
   setwd(figurepath)
@@ -243,15 +249,11 @@ to_plots <- function(){
             xlab="Time [seconds]",geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
 
-  #png("to_gsms.png")
   p2 <- qplot(time, T25_2, data=data_takeoff,  col=I("blue"),
             xlab="Time [seconds]", geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
   arrange(p1,p2)
   dev.off()
 
@@ -261,15 +263,11 @@ to_plots <- function(){
             xlab="Time [seconds]",geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
 
-  #png("to_gsms.png")
   p2 <- qplot(time, T12_2, data=data_takeoff,  col=I("blue"),
             xlab="Time [seconds]", geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
   arrange(p1,p2)
   dev.off()
 
@@ -393,15 +391,11 @@ to_plots <- function(){
             xlab="Time [seconds]",  ylab="Thrust Lever Position Eng 1" ,geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
 
-  #png("to_gsms.png")
   p2 <- qplot(time, TLA2C, data=data_takeoff,  col=I("blue"),
             xlab="Time [seconds]",  ylab="Thrust Lever Position Eng 2" ,geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
   arrange(p1,p2)
   dev.off()
 
@@ -416,7 +410,7 @@ to_plots <- function(){
             xlab="Time [seconds]",  ylab="Thrust Lever Angle Eng 2" ,geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-#print(p)
+
   arrange(p1,p2)
   dev.off()
 
@@ -426,15 +420,11 @@ to_plots <- function(){
             xlab="Time [seconds]",  ylab="Static Air Temperature [degC]" ,geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
 
-  #png("to_gsms.png")
   p2 <- qplot(time, TAT, data=data_takeoff,  col=I("blue"),
             xlab="Time [seconds]",  ylab="Total Air Temperature [degC]" ,geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
   arrange(p1,p2)
   dev.off()
 
@@ -444,10 +434,7 @@ to_plots <- function(){
             xlab="Time [seconds]",  ylab="Flex Temperature [degC]" ,geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
-
-  #png("to_gsms.png")
+  
   p2 <- qplot(time, FLX2_TEMP, data=data_takeoff,  col=I("blue"),
             xlab="Time [seconds]",  ylab="Flex Temperature [degC]" ,geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
@@ -462,15 +449,11 @@ to_plots <- function(){
              xlab="Time [seconds]",  ylab="Ground Speed [Knot]" ,geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
-  
-  #png("to_gsms.png")
+
   p2 <- qplot(time, GS_MS, data=data_takeoff,  col=I("blue"),
            xlab="Time [seconds]",  ylab="Ground Speed [m/s]" ,geom=c("line"), size=I(1)) +
            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
            geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
   arrange(p1,p2)
   dev.off()
 
@@ -479,15 +462,11 @@ to_plots <- function(){
              xlab="Time [seconds]", geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
 
-  #png("to_raltd2.png")
   p2 <- qplot(time, RALTD2, data=data_takeoff, col=I("blue"),
            xlab="Time [seconds]", geom=c("line"), size=I(1)) +
            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
            geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
   arrange(p1,p2)
   dev.off()
 
@@ -496,15 +475,11 @@ to_plots <- function(){
              xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
 
-  #png("to_n12.png")
   p2 <- qplot(time, N12, data=data_takeoff, col=I("blue"),
            xlab="Time [seconds]", geom=c("line"), size =I(1)) +
            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
            geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
   arrange(p1,p2)
   dev.off()
 
@@ -514,15 +489,11 @@ to_plots <- function(){
              xlab="Time [seconds]", geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
-  
-  #png("to_n22.png")
+
   p2 <- qplot(time, N22, data=data_takeoff, col=I("blue"),
              xlab="Time [seconds]", geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
   arrange(p1,p2)
   dev.off()
   
@@ -532,15 +503,11 @@ to_plots <- function(){
              xlab="Time [seconds]", geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
-  
-  #png("to_ff2.png")
+
   p2 <- qplot(time, FF2, data=data_takeoff, col=I("blue"),
              xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
   arrange(p1,p2)
   dev.off()
   
@@ -550,15 +517,11 @@ to_plots <- function(){
              xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
              geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
-  
-  #png("to_egt2.png")
+
   p2 <- qplot(time, EGT2, data=data_takeoff, col=I("blue"),
              xlab="Time [seconds]", geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
   arrange(p1,p2)
   dev.off()
   
@@ -568,10 +531,7 @@ to_plots <- function(){
              xlab="Time [seconds]", ylab="LONG [g]", ylim=c(-0.05,0.35) ,geom=c("line"), size=I(1)) +
              geom_vline(xintercept=loff_sec, color="dark red", size=1) + 
              geom_vline(xintercept=rot, color="green", size=1)
-  #print(p)
-  #dev.off()
 
-  #png("to_gsdot.png")
   p2 <- qplot(time, GSDOT_FILT, data=data_takeoff,  col=I("blue"),
            xlab="Time [seconds]", ylim=c(-0.05,0.35), geom=c("line"), size=I(1)) +
            geom_vline(xintercept=loff_sec, color="dark red", size=1) + 
@@ -625,7 +585,33 @@ to_plots <- function(){
   print(p)
   dev.off()
 
-  # Correlation of several parameters
+##$##
+  png("alt_stdc.png")
+  p <- qplot(time, ALT_STD, data=data_takeoff,  col=I("blue"),
+           xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
+    geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+    geom_vline(xintercept=rot, color="green", size=1)
+  print(p)
+  dev.off()
+
+  png("to_vrtg.png")
+  p <- qplot(time, VRTG, data=data_takeoff,  col=I("blue"),
+           xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
+    geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+    geom_vline(xintercept=rot, color="green", size=1)
+  print(p)
+  dev.off()
+
+  png("to_fpac.png")
+  p <- qplot(time, FPAC, data=data_takeoff,  col=I("blue"),
+           xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
+    geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+    geom_vline(xintercept=rot, color="green", size=1)
+  print(p)
+  dev.off()
+
+##############################################################################
+# Graphics from Correlation of several parameters
 
   #setwd(figurepath)
 #   png("ffvsn2.png", width=1500)
@@ -660,6 +646,7 @@ to_plots <- function(){
   line2 <- paste("\\","end{verbatim}",sep="")
   write(line2, file="tlavsff_eng1.tex", append=TRUE)
   setwd(figurepath)
+
 
   png("tlavsff_eng2.png")
   with(data_takeoff, plot( TLA2, FF2, type="l", col="blue", lwd=1.5))
@@ -696,7 +683,6 @@ to_plots <- function(){
   write(line2, file="ffvsn2_eng1.tex", append=TRUE)
   setwd(figurepath)
 
-##$##
 
   png("ffvsn2_eng2.png") #
   with(data_takeoff, plot( FF2, N22, type="l", col="blue", lwd=1.5))
@@ -771,7 +757,6 @@ to_plots <- function(){
 
   #teste <- print(xtable(unlist(N2est$coefficient), format="latex"), include.rownames=TRUE, size="scriptsize") 
   #teste1 <- print(xtablne(as.matrix(N2est$terms), format="latex"), include.rownames=TRUE, size="scriptsize") 
-
 
   #print.sumreg <- print(xtable(sum_reg, format="latex"), include.rownames=FALSE, size="scriptsize") 
 
@@ -957,7 +942,7 @@ fileList <- list.files(path=flightpath, pattern=".csv")
 
 ## Escolher o ficheiro pelo nº "s"
 #s = 1
-s=12
+s=16
 
 # alternativa - fazer o enable deste ciclo FOR para todos os ficheiros do folder
 #for (s in 1:NROW(fileList)) {

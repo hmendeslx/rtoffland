@@ -1,12 +1,15 @@
-take-off performance tool
+Take-Off and Landing performance tool
 
-main file = Rtoff.r
+main file = Rtoffland.R
 
 
 
-Scope:
+Scope Take-Off:
 - desde aplicação de potencia de Take-Off
 - Até à rotação (método do Flare!)
 
 - Determinar pontos de rotação e de Lift-OFF (Estudo já feito!). 
 - validar LO posterior à rotação!
+
+
+Scope Landing:
