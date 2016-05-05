@@ -95,17 +95,18 @@ Report Date: \today
 
 \begin{table}[h!]\normalsize
 \centering
-%\caption{Range of dates}
+\caption{Analysis Report Summary}
 \label{minmaxdates}
 \begin{tabular}{|l|l|}
 \hline
 \hline
+\textbf{Time Considered [second]} &  <%=time_considered%>    \\ \hline
 \textbf{Departure Airport} & <%=origin%>  \\ \hline
 \textbf{Runway Heading} &  <%=rwhdg%>   \\ \hline
 \textbf{Date} &   <%=dat%>  \\ \hline
 \textbf{Rotation Time [second]} &   <%=rotation_time%>   \\ \hline
-\textbf{TLA1 Position} &  <%=tla1_pos%>    \\ \hline
-\textbf{TLA2 Position} &  <%=tla2_pos%>    \\ \hline
+\textbf{TLA1 Position @Take-Off} &  <%=tla1_pos%>    \\ \hline
+\textbf{TLA2 Position @Take-Off} &  <%=tla2_pos%>    \\ \hline
 \textbf{Flex Temperature Sytem 1 [degC]} & <%=flxtemp1%>  \\ \hline
 \textbf{Flex Temperature Sytem 1 [degC]} & <%=flxtemp2%>  \\ \hline
 \textbf{Wing Area [m2]} &  <%=area%>   \\ \hline
@@ -115,6 +116,9 @@ Report Date: \today
 \hline
 \end{tabular}
 \end{table}
+
+%% NOTA:
+%% arranjar um nome melhor para "Time @Take-Off Considered" !!!!
 
 
 \newpage
@@ -212,6 +216,26 @@ Report Date: \today
 \end{center}
 \end{figure}
 
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=10cm,scale=1]{figures/to_fpac.png}
+\caption{Flight Path Acceleration [g]}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=10cm,scale=1]{figures/to_vrtg.png}
+\caption{Vertical Acceleration [g]}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_raltd1.png}
@@ -222,7 +246,17 @@ Report Date: \today
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_pitch.png}
+\includegraphics[width=10cm,scale=1]{figures/alt_stdc.png}
+\caption{Altitude Standard [ft]}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=10cm,scale=1]{figures/to_pitch.png}
 \caption{Pitch Angle [deg]}
 %\label{vrtg}
 \end{center}
@@ -230,7 +264,7 @@ Report Date: \today
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_ptcr.png}
+\includegraphics[width=10cm,scale=1]{figures/to_ptcr.png}
 \caption{Pitch Rate [deg/s]}
 %\label{vrtg}
 \end{center}
@@ -239,7 +273,7 @@ Report Date: \today
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=8cm,scale=1]{figures/to_ptcr_dot.png}
+\includegraphics[width=10cm,scale=1]{figures/to_ptcr_dot.png}
 \caption{Pitch Acceleration $ -> $ d(pitch\_rate)/dt}
 %\label{vrtg}
 \end{center}
@@ -278,6 +312,8 @@ Report Date: \today
 \end{center}
 \end{figure}
 
+\clearpage
+\newpage
 
 \begin{figure}[ht]
 \begin{center}
@@ -370,6 +406,8 @@ Report Date: \today
 \end{figure}
 
 
+
+
 \clearpage
 \newpage
 \begin{Large}
@@ -395,7 +433,6 @@ Report Date: \today
 \end{center}
 \end{figure}
 
-%##$##
 
 \begin{figure}[ht]
 \begin{center}
@@ -435,7 +472,7 @@ Report Date: \today
 
 
 \include{tlavsff_eng1}
-\include{tlavsff_eng1}
+\include{tlavsff_eng2}
 \include{ffvsn2_eng1}
 \include{ffvsn2_eng2}
 \include{n1vsn2_eng1}
