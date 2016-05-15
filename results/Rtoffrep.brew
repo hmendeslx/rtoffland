@@ -102,7 +102,8 @@ Report Date: \today
 \hline
 \textbf{Time Considered [second]} &  <%=time_considered%>    \\ \hline
 \textbf{Departure Airport} & <%=origin%>  \\ \hline
-\textbf{Runway Heading} &  <%=rwhdg%>   \\ \hline
+\textbf{Departure Runway Heading} &  <%=rwhdg%>   \\ \hline
+\textbf{Destination Airport} & <%=destination%>  \\ \hline
 \textbf{Date} &   <%=dat%>  \\ \hline
 \textbf{Rotation Time [second]} &   <%=rotation_time%>   \\ \hline
 \textbf{TLA1 Position @Take-Off} &  <%=tla1_pos%>    \\ \hline
@@ -160,6 +161,17 @@ Report Date: \today
 
 \vspace{2cm}
 
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=10cm,scale=1]{figures/to_landgear.png}
+\caption{Landing Gear}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_n11.png}
@@ -208,6 +220,16 @@ Report Date: \today
 \end{center}
 \end{figure}
 
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_speeds.png}
+\caption{1)Indicated Airspeed [knot] 2) MACH Number}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_long.png}
@@ -221,6 +243,15 @@ Report Date: \today
 \begin{center}
 \includegraphics[width=10cm,scale=1]{figures/to_fpac.png}
 \caption{Flight Path Acceleration [g]}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_wind.png}
+\caption{1)Wind Speed [Knot] 2) Wind Direction [deg]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -287,6 +318,11 @@ Report Date: \today
 \end{center}
 \end{figure}
 
+\clearpage
+\newpage
+
+
+
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_flxtemp.png}
@@ -312,8 +348,6 @@ Report Date: \today
 \end{center}
 \end{figure}
 
-\clearpage
-\newpage
 
 \begin{figure}[ht]
 \begin{center}
@@ -327,7 +361,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_q.png}
-\caption{Dinamic Pressure [mBar]}
+\caption{Q - Dynamic Pressure [mBar]}
 %\label{vrtg}
 \end{center}
 \end{figure}
@@ -335,7 +369,7 @@ Report Date: \today
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_pt.png}
-\caption{Total Pressure [mBar]}
+\caption{PT - Total Pressure [mBar]}
 %\label{vrtg}
 \end{center}
 \end{figure}

@@ -29,3 +29,7 @@ http://www.r-bloggers.com/easily-generate-correlated-variables-from-any-distribu
 
 ## NLR
 http://www.nlr.org/capabilities/gas-turbines/
+
+## build R project
+https://docs.travis-ci.com/user/languages/r
+
