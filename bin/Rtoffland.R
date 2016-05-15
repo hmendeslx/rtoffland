@@ -77,9 +77,9 @@ to_plots <- function(){
 
   # Take-Off Start and End Points determination
   t0 <- min(which(flightdata$FM_FWC==3)) - 200
-  t1 <- max(which(flightdata$FM_FWC==4)) + 50
+  #t1 <- max(which(flightdata$FM_FWC==4)) + 50
   #t1 <- max(which(flightdata$FM_FWC==4)) + 500
-  #t1 <- max(which(flightdata$FM_FWC==4)) + 1500
+  t1 <- max(which(flightdata$FM_FWC==4)) + 1500
   
   ptcr_dot <-derivative(ptcr[t0:t1],NROW(ptcr[t0:t1]))
   gs_ms <- gs[t0:t1]*c_knot_ms
@@ -112,7 +112,9 @@ to_plots <- function(){
                       p2_1[t0:t1], p2_2[t0:t1],p31[t0:t1], p32[t0:t1],
                       t12_1[t0:t1], t12_2[t0:t1],t25_1[t0:t1], t25_2[t0:t1],
                       head_mag[t0:t1], fm_fwc[t0:t1], alt_std[t0:t1], vrtg[t0:t1],
-                      fpac[t0:t1])) #
+                      fpac[t0:t1], winspd[t0:t1],windir[t0:t1],
+                      LG_left[t0:t1],LG_nose[t0:t1],LG_right[t0:t1],
+                      ias[t0:t1], mach[t0:t1])) # 
   
   names(data_takeoff) <- c("time", "GS", "RALTD1", "N11", "N21", "N12", "N22",
                            "FF1", "FF2", "RALTD2", "EGT1", "EGT2", "LONG",
@@ -123,7 +125,8 @@ to_plots <- function(){
                            "Q1", "Q2", "PT1", "PT2", "P0_1", "P0_2", "GW1KG",
                            "P2_1", "P2_2", "P31", "P32", "T12_1", "T12_2",
                            "T25_1", "T25_2", "HDG", "FM_FWC", "ALT_STD", "VRTG",
-                           "FPAC")
+                           "FPAC", "WIN_SPD", "WIN_DIR", "LG_left", "LG_nose",
+                           "LG_right", "IAS","MACH")
   
   # Parameter Description
   par.names <- as.vector(names(data_takeoff))
@@ -136,7 +139,8 @@ to_plots <- function(){
                 "aircraft","aircraft", "aircraft","aircraft", "aircraft",
                 "aircraft", "aircraft","aircraft", "aircraft","aircraft", "aircraft",
                 "aircraft", "aircraft","aircraft", "aircraft","aircraft","aircraft",
-                "aircraft","aircraft","aircraft")
+                "aircraft","aircraft","aircraft","aircraft","aircraft",
+                "aircraft","aircraft","aircraft","aircraft","aircraft")
   
   par.descr <- c("time [second]", 
                  "Ground Speed [knot]", 
@@ -168,8 +172,8 @@ to_plots <- function(){
                  "Thrust Lever Position Eng 2",
                  "Thrust Lever Angle Eng 1",
                  "Thrust Lever Angle Eng 2",
-                 "Dinamic Pressure Sys 1 [mBar]",
-                 "Dinamic Pressure Sys 2 [mBar]",
+                 "Dynamic Pressure Sys 1 [mBar]",
+                 "Dynamic Pressure Sys 2 [mBar]",
                  "Total Pressure Sys 1 [mBar]",
                  "Total Pressure Sys 2 [mBar]",
                  "Selected P0 Eng1 (Amb Press) [psia]",
@@ -187,7 +191,14 @@ to_plots <- function(){
                  "Flight Phase ( From FWC)",
                  "Altitude Standard [ft]",
                  "Vertical Acceleration [g]",
-                 "Flight Path Acceleration")
+                 "Flight Path Acceleration",
+                 "Wind Speed [Knot]",
+                 "Wind Direction [deg]",
+                 "Landing Gear Left",
+                 "Landing Gear Nose",
+                 "Landing Gear Right",
+                 "Indicated Airspeed",
+                 "MACH Number")
   
   par.print <- as.data.frame(cbind(par.names, par.descr, par.origin))
   names(par.print) <- c("Menemonic", "Description", "Origin")
@@ -258,6 +269,20 @@ to_plots <- function(){
   dev.off()
 
 
+  png("to_speeds.png", width=960)
+  p1 <- qplot(time, IAS, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+
+  p2 <- qplot(time, MACH, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+  arrange(p1,p2)
+  dev.off()
+
+
   png("to_t12.png", width=960)
   p1 <- qplot(time, T12_1, data=data_takeoff,  col=I("blue"),
             xlab="Time [seconds]",geom=c("line"), size=I(1)) +
@@ -303,6 +328,19 @@ to_plots <- function(){
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
   #print(p)
+  arrange(p1,p2)
+  dev.off()
+
+  png("to_wind.png", width=960)
+  p1 <- qplot(time, WIN_SPD, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]",geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
+
+  p2 <- qplot(time, WIN_DIR, data=data_takeoff,  col=I("blue"),
+            xlab="Time [seconds]", geom=c("line"), size=I(1)) +
+            geom_vline(xintercept=loff_sec, color="dark red", size=1) +
+            geom_vline(xintercept=rot, color="green", size=1)
   arrange(p1,p2)
   dev.off()
 
@@ -370,7 +408,7 @@ to_plots <- function(){
 
   png("to_q.png", width=960)
   p1 <- qplot(time, Q1, data=data_takeoff,  col=I("blue"),
-            xlab="Time [seconds]",  ylab="Dinamic Press Sys 1" ,geom=c("line"), size=I(1)) +
+            xlab="Time [seconds]",  ylab="Dynamic Press Sys 1" ,geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
   #print(p)
@@ -378,7 +416,7 @@ to_plots <- function(){
 
   #png("to_gsms.png")
   p2 <- qplot(time, Q2, data=data_takeoff,  col=I("blue"),
-            xlab="Time [seconds]",  ylab="Dinamic Press Sys 2" ,geom=c("line"), size=I(1)) +
+            xlab="Time [seconds]",  ylab="Dynamic Press Sys 2" ,geom=c("line"), size=I(1)) +
             geom_vline(xintercept=loff_sec, color="dark red", size=1) +
             geom_vline(xintercept=rot, color="green", size=1)
   #print(p)
@@ -585,7 +623,6 @@ to_plots <- function(){
   print(p)
   dev.off()
 
-##$##
   png("alt_stdc.png")
   p <- qplot(time, ALT_STD, data=data_takeoff,  col=I("blue"),
            xlab="Time [seconds]", geom=c("line"), size=I(1)) + 
@@ -609,6 +646,30 @@ to_plots <- function(){
     geom_vline(xintercept=rot, color="green", size=1)
   print(p)
   dev.off()
+
+
+##$## cont...
+### plot() graphics - faster overplot
+# http://www.sthda.com/english/wiki/add-legends-to-plots-in-r-software-the-easiest-way
+
+
+png("to_landgear.png")  
+
+with(data_takeoff, plot(time,LG_left, type="l", ylab="Landing Gear",col="blue",lwd=2))
+with(data_takeoff, lines(time,LG_nose, type="l", col="black",lwd=2))
+with(data_takeoff, lines(time,LG_right, type="l", col="brown",lwd=2))
+
+abline(v=rot,col="green", lwd=2)
+abline(v=loff_sec,col="red", lwd=2)
+grid(,,col="dark red")
+
+legend("bottomleft",legend=c("Landing Gear Left","Landing Gear Nose","Landing Gear Right")
+       ,col=c("blue","black","brown"),bg="light blue",lwd=1, cex=1)
+
+
+dev.off()
+
+
 
 ##############################################################################
 # Graphics from Correlation of several parameters
@@ -755,6 +816,7 @@ to_plots <- function(){
   write(line2, file="N22est.tex", append=TRUE)
 
 
+
   #teste <- print(xtable(unlist(N2est$coefficient), format="latex"), include.rownames=TRUE, size="scriptsize") 
   #teste1 <- print(xtablne(as.matrix(N2est$terms), format="latex"), include.rownames=TRUE, size="scriptsize") 
 
@@ -768,7 +830,6 @@ to_plots <- function(){
 #  setwd(resultpath)
   brew("Rtoffrep.brew", paste0('Rtoffrep',s,".tex"))
   texi2dvi(paste0('Rtoffrep',s,".tex"), pdf = TRUE)
-  ##$##  
 
 }
 
@@ -931,7 +992,8 @@ c_ms_kmh <- 3.6
 area <- 138 # [m^2] - surface of the wing with flaps 
 
 ## paths
-flightpath <- "C:/FlightDB/TTD"    ## Insert case into the respective folder
+#flightpath <- "C:/FlightDB/TTD"    ## Insert case into the respective folder
+flightpath <- "C:/FlightDB/ZRH"    ## Insert case into the respective folder
 binpath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/bin"
 resultpath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/results"
 figurepath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/results/figures"
@@ -941,8 +1003,7 @@ setwd(flightpath)
 fileList <- list.files(path=flightpath, pattern=".csv")
 
 ## Escolher o ficheiro pelo nº "s"
-#s = 1
-s=16
+s=1
 
 # alternativa - fazer o enable deste ciclo FOR para todos os ficheiros do folder
 #for (s in 1:NROW(fileList)) {
@@ -977,6 +1038,7 @@ s=16
     latg <- approx(seq(1:nrows), flightdata$LATG,xout=c(1:nrows), method="linear",n=nrows)$y
     roll <- approx(seq(1:nrows), flightdata$ROLL,xout=c(1:nrows), method="linear",n=nrows)$y
     ias <- approx(seq(1:nrows), flightdata$IASC,xout=c(1:nrows), method="linear",n=nrows)$y
+    mach <- approx(seq(1:nrows), flightdata$MACH,xout=c(1:nrows), method="linear",n=nrows)$y
     gs <- approx(seq(1:nrows), flightdata$GSC,xout=c(1:nrows), method="linear",n=nrows)$y
     gw1kg <- approx(seq(1:nrows), flightdata$GW1KG,xout=c(1:nrows), method="linear",n=nrows)$y
     fpa <- approx(seq(1:nrows), flightdata$FPA,xout=c(1:nrows), method="linear",n=nrows)$y
@@ -1018,6 +1080,8 @@ s=16
     t25_1 <- approx(seq(1:nrows), flightdata$T25_1,xout=c(1:nrows), method="linear",n=nrows)$y
     t25_2 <- approx(seq(1:nrows), flightdata$T25_2,xout=c(1:nrows), method="linear",n=nrows)$y
     fm_fwc <- approx(seq(1:nrows), flightdata$FM_FWC,xout=c(1:nrows), method="linear",n=nrows)$y
+    winspd <- approx(seq(1:nrows), flightdata$WIN_SPDR,xout=c(1:nrows), method="linear",n=nrows)$y
+    windir <- approx(seq(1:nrows), flightdata$WIN_DIRR,xout=c(1:nrows), method="linear",n=nrows)$y
 
 # sempre a zero!????
 #ps13_1<- approx(seq(1:nrows), flightdata$PS13_1,xout=c(1:nrows), method="linear",n=nrows)$y
