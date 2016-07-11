@@ -250,6 +250,23 @@ Report Date: \today
 
 \begin{figure}[ht]
 \begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_vibn1fnt.png}
+\caption{N1 Vibration Cockpit Indication}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=18cm,scale=1]{figures/to_vibn2fnt.png}
+\caption{N2 Vibration Cockpit Indication}
+%\label{vrtg}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
 \includegraphics[width=18cm,scale=1]{figures/to_wind.png}
 \caption{1)Wind Speed [Knot] 2) Wind Direction [deg]}
 %\label{vrtg}

@@ -16,3 +16,4 @@ autorep*.tex
 *.zip
 *.xps
 *.gz
+*.RData
