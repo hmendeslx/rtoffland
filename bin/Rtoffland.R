@@ -1026,7 +1026,8 @@ c_ms_kmh <- 3.6
 area <- 138 # [m^2] - surface of the wing with flaps 
 
 ## paths
-flightpath <- "C:/FlightDB/TTD"    ## Insert case into the respective folder
+flightpath <- "V:/HM/FlightDB"    ## Insert case into the respective folder
+#flightpath <- "C:/FlightDB/TTD"    ## Insert case into the respective folder
 #flightpath <- "C:/FlightDB/ZRH"    ## Insert case into the respective folder
 #flightpath <- "C:/FlightDB/UBI"    ## Insert case into the respective folder
 binpath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/bin"
@@ -1038,7 +1039,8 @@ setwd(flightpath)
 fileList <- list.files(path=flightpath, pattern=".csv")
 
 ## Escolher o ficheiro pelo nº "s"
-s=25
+s = 1
+#s=25
 
 # alternativa - fazer o enable deste ciclo FOR para todos os ficheiros do folder
 #for (s in 1:NROW(fileList)) {
@@ -1055,7 +1057,12 @@ s=25
   flightdata <- fread(fileList[s],sep=",",header=T, stringsAsFactors = F, verbose=FALSE,
                       colClasses = c(ACT='character', AC_TYPE='character', ORIGIN='character', 
                       RUNWAY_TO='character', RUNWAY_LD='character', DESTINATION='character', 
-                      DATE='Date')) 
+                      DATE='Date', FLTNUM1='character', FLTNUM2='character', FLTNUM3='character',
+                      FLTNUM4='character', FLT_NUMBER1='character', FLT_NUMBER2='character',
+                      FLT_NUMBER3='character', FLT_NUMBER4='character', FLT_NUMBER5='character',
+                      FLT_NUMBER6='character', FLT_NUMBER7='character', FLT_NUMBER8='character',
+                      CITY_FROM_R='character', CITY_FROM_TO_R='character', CITY_TO_R='character',
+                      FROM='character', FROM_TO='character',TO='character', UTC_HOUR='character' )) 
   
     nrows <- NROW(flightdata)
         
