@@ -23,7 +23,6 @@ library(data.table)
 library(psych)
 library(lubridate)
 library(xtable)
-library(data.table)
 library(psych)
 
 # finding parameters - Trouble-shooting
@@ -50,8 +49,6 @@ panel.cor <- function(x, y, digits=2, prefix="", cex.cor, ...)
   if(missing(cex.cor)) cex.cor <- 1.5/strwidth(txt)
   text(0.5, 0.5, txt, cex = cex.cor )#* r)
 }
-
-
 
 # derivative of a vector
 derivative <- function(vector,time_interval) {
@@ -257,7 +254,7 @@ to_plots <- function(){
   gw_final <- data_takeoff$GW1KG[(t1-t0)+1]
   fuel_gw <- gw_ini - gw_final
   time_considered <- (t1-t0)/8
-  # calculo de consumo através do FF - comparar com o de cima
+  # calculo de consumo atrav?s do FF - comparar com o de cima
 
   # Graphics
   # Fast Testing Command:
@@ -1038,7 +1035,7 @@ figurepath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/results/figures"
 setwd(flightpath)
 fileList <- list.files(path=flightpath, pattern=".csv")
 
-## Escolher o ficheiro pelo nº "s"
+## Escolher o ficheiro pelo n? "s"
 s = 1
 #s=25
 
