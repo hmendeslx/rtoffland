@@ -8,6 +8,8 @@ autoland_neo.tex
 *.csv
 *.docx
 *.xlsx
+*.xls
+*.xlm
 test*.r
 Rtoffrep*.tex
 autorep*.tex
