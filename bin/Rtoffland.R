@@ -1023,7 +1023,8 @@ c_ms_kmh <- 3.6
 area <- 138 # [m^2] - surface of the wing with flaps 
 
 ## paths
-flightpath <- "V:/HM/FlightDB"    ## Insert case into the respective folder
+flightpath <-"/home/hmendes/Dropbox/EASA/flightRtools/FlightDB"
+#flightpath <- "V:/HM/FlightDB"    ## Insert case into the respective folder
 #flightpath <- "C:/FlightDB/TTD"    ## Insert case into the respective folder
 #flightpath <- "C:/FlightDB/ZRH"    ## Insert case into the respective folder
 #flightpath <- "C:/FlightDB/UBI"    ## Insert case into the respective folder
