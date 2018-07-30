@@ -1024,13 +1024,11 @@ area <- 138 # [m^2] - surface of the wing with flaps
 
 ## paths
 flightpath <-"/home/hmendes/Dropbox/EASA/flightRtools/FlightDB"
-#flightpath <- "V:/HM/FlightDB"    ## Insert case into the respective folder
-#flightpath <- "C:/FlightDB/TTD"    ## Insert case into the respective folder
-#flightpath <- "C:/FlightDB/ZRH"    ## Insert case into the respective folder
-#flightpath <- "C:/FlightDB/UBI"    ## Insert case into the respective folder
-binpath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/bin"
-resultpath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/results"
-figurepath <- "C:/Users/210906/Dropbox/EASA/flightRtools/Rtoff/results/figures"
+binpath <-"/home/hmendes/Dropbox/EASA/flightRtools/Rtoff/bin"
+resultpath <-"/home/hmendes/Dropbox/EASA/flightRtools/Rtoff/results"
+figurepath <- "/home/hmendes/Dropbox/EASA/flightRtools/Rtoff/figures"
+
+
 
 # file list
 setwd(flightpath)
