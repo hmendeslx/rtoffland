@@ -1,5 +1,11 @@
+## Immediate future developments plan
+
+- 
+
+
+
 ####
-* incluir flex temps + pressões q e total + SAT + TAT + GW + parâmetros intermédios de motor
+* incluir flex temps + press?es q e total + SAT + TAT + GW + par?metros interm?dios de motor
 
 p25_1 p25_2
 
@@ -7,43 +13,43 @@ p25_1 p25_2
 
 ??
 ps13_1 e ps13_2
-dão sempre valor zero!!
+d?o sempre valor zero!!
 
-P25_1 e P25_2 não estão a ser gravados
+P25_1 e P25_2 n?o est?o a ser gravados
 ECU/262/xx
 
 PB_1
 PB_2
 ECU/264/xx
-Não está 
+N?o est? 
 
-* Cálculo de consumo @TOff através do FF - comparar com a perda de GW[Kg]
+* C?lculo de consumo @TOff atrav?s do FF - comparar com a perda de GW[Kg]
 
 ####
-* escala de tempo trab BAC e este relatório?? Voos diferentes! Erro em algum dos trabalhos?
-* overplot de várias linhas num gráfico.. EGT.. N1... etc
+* escala de tempo trab BAC e este relat?rio?? Voos diferentes! Erro em algum dos trabalhos?
+* overplot de v?rias linhas num gr?fico.. EGT.. N1... etc
 
-* calc pressão estática + plot
+* calc press?o est?tica + plot
 
-* vd definição de long da netjets
+* vd defini??o de long da netjets
 
-* procedimento para determinar a resolução de todos os parâmetros
+* procedimento para determinar a resolu??o de todos os par?metros
 
-* distinguir entre parâmetros calculados e originais de avião (tabela de parâmetros)
+* distinguir entre par?metros calculados e originais de avi?o (tabela de par?metros)
 
-* calcular a distância percorrida até ao Loff
+* calcular a dist?ncia percorrida at? ao Loff
 
 
-* verificar as unidades de todos os parâmetros
+* verificar as unidades de todos os par?metros
 
-* análise dos resultados da aceleração longitudinal - gráfico dgs/dt dá um decréscimo no final onde o long começa a crescer
-  as unidades também não batem certo, i.e., long em "g" e dgs/dt em m/s2 estão aprox na mesma escala de valores o que 
-  não faz sentido
+* an?lise dos resultados da acelera??o longitudinal - gr?fico dgs/dt d? um decr?scimo no final onde o long come?a a crescer
+  as unidades tamb?m n?o batem certo, i.e., long em "g" e dgs/dt em m/s2 est?o aprox na mesma escala de valores o que 
+  n?o faz sentido
 ####
 
 
-Acções finalizadas:
-* trabalhar o gs_dot!? -> não está a dar o esperado
-* descrição dos parâmetros usados no report
+Ac??es finalizadas:
+* trabalhar o gs_dot!? -> n?o est? a dar o esperado
+* descri??o dos par?metros usados no report
 
 ####
