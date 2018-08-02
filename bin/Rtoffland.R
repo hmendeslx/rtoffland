@@ -1023,10 +1023,22 @@ c_ms_kmh <- 3.6
 area <- 138 # [m^2] - surface of the wing with flaps 
 
 ## paths
-flightpath <-"/home/hmendes/Dropbox/EASA/flightRtools/FlightDB"
-binpath <-"/home/hmendes/Dropbox/EASA/flightRtools/Rtoff/bin"
-resultpath <-"/home/hmendes/Dropbox/EASA/flightRtools/Rtoff/results"
-figurepath <- "/home/hmendes/Dropbox/EASA/flightRtools/Rtoff/figures"
+workdir <- getwd()
+
+if (workdir == "/resources/rstudio") {
+  flightpath <-"/resources/rstudio/work/flightRtools/FlightDB"
+  binpath <-"/resources/rstudio/work/flightRtools/rtoffland/bin"
+  resultpath <-"/resources/rstudio/work/flightRtools/rtoffland/results"
+  figurepath <- "/resources/rstudio/work/flightRtools/rtoffland/figures"
+  
+} else {
+  flightpath <-"/home/hmendes/Dropbox/EASA/flightRtools/FlightDB"
+  binpath <-"/home/hmendes/Dropbox/EASA/flightRtools/Rtoff/bin"
+  resultpath <-"/home/hmendes/Dropbox/EASA/flightRtools/Rtoff/results"
+  figurepath <- "/home/hmendes/Dropbox/EASA/flightRtools/Rtoff/figures"
+  
+} 
+
 
 
 
@@ -1137,17 +1149,16 @@ s = 1
 
 ## Support calcs and figs
 # colocar mais tarde nos "flight_measurements"
-orig <- which(!flightdata$ORIGIN=="")
-origin <- flightdata$ORIGIN[orig[1000]]
 
-dest <- which(!flightdata$DESTINATION=="")
-destination <- flightdata$DESTINATION[dest[1000]]
-
-dat <- which(!flightdata$DATE=="")
-dat <- flightdata$DATE[dat[1000]]
-
-rwhdg <- which(!flightdata$RUNWAY_TO=="")
-rwhdg <- flightdata$RUNWAY_TO[rwhdg[1000]]
+### All the identification information are removed from this version - Activate when convenient   
+#orig <- which(!flightdata$ORIGIN=="")
+#origin <- flightdata$ORIGIN[orig[1000]]
+#dest <- which(!flightdata$DESTINATION=="")
+#destination <- flightdata$DESTINATION[dest[1000]]
+#dat <- which(!flightdata$DATE=="")
+#dat <- flightdata$DATE[dat[1000]]
+#rwhdg <- which(!flightdata$RUNWAY_TO=="")
+#rwhdg <- flightdata$RUNWAY_TO[rwhdg[1000]]
 ##
 
 
