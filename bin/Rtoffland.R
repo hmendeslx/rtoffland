@@ -23,7 +23,7 @@ library(data.table)
 library(psych)
 library(lubridate)
 library(xtable)
-library(psych)
+#library(psych)
 
 # finding parameters - Trouble-shooting
 # use:
